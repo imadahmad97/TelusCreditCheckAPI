@@ -17,10 +17,8 @@ class CreditCardUser(BaseModel):
             self.date_of_birth, "%Y-%m-%d"
         ).date()
         expiration_year, expiration_month = map(int, self.expiration_date.split("-"))
-        print(expiration_month)
         self.expiration_date = datetime.date(expiration_year, expiration_month, 1)
 
     def create_credit_card_user(self):
-        print(self.expiration_date)
         self.parse_dates()
         return self
