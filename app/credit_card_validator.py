@@ -26,3 +26,4 @@ class CreditCardValidator:
         CreditCardValidator.validate_number_lengths(credit_card_user)
         CreditCardValidator.validate_expiration_date(credit_card_user)
         CreditCardValidator.validate_credit_card_issuer(credit_card_user)
+        return True
