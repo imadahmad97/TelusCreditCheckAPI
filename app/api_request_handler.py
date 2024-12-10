@@ -30,6 +30,6 @@ def handle_credit_check_request(user: CreditCardUser) -> dict:
     """
     CreditCardUser.create_credit_card_user(user)
     CreditCardValidator.validate(user)
-    if CreditApprovalChecker.check_approval(user):
+    if CreditApprovalChecker.check_if_user_approved(user):
         return {"credit_approval": "approved"}
     return {"credit_approval": "denied"}

@@ -4,6 +4,10 @@ methods to parse dates and create a credit card user.
 
 Classes:
     CreditCardUser: A class to represent a single credit card user.
+
+Dependencies:
+    - datetime
+    - pydantic
 """
 
 import datetime
@@ -25,8 +29,8 @@ class CreditCardUser(BaseModel):
         credit_card_issuer (str): The issuer of the credit card.
 
     Methods:
-        parse_dates()
-        create_credit_card_user()
+        parse_dates(): Parses the date of birth and expiration date
+        create_credit_card_user(): Creates a credit card user and parses the dates.
     """
 
     first_name: str
@@ -50,7 +54,7 @@ class CreditCardUser(BaseModel):
 
     def create_credit_card_user(self) -> "CreditCardUser":
         """
-        Creates a credit card user and parses the dates.
+        Creates a credit card user and parses the dates by calling the parse_dates method.
 
         Returns:
             CreditCardUser: A CreditCardUser object.

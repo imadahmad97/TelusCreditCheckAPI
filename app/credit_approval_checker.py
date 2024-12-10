@@ -1,21 +1,74 @@
-from .credit_card_validator import CreditCardValidator
+"""
+A module to validate credit card information. It contains the CreditCardValidator class with methods
+to validate the credit card number, expiration date, and issuer.
+
+Classes:
+    CreditCardValidator: A class to validate credit card information.
+    
+Dependencies:
+    - datetime
+    - HTTPException
+    - CreditCardUser
+"""
+
 import datetime
-from . import init_app
+from . import init_db
 
 
 class CreditApprovalChecker:
-    def check_user_over_18(user):
+    """
+    A class to check the credit approval of a user. It contains methods to check if the user is over
+    18, an existing customer, the credit score, and if the user is approved.
+
+    Methods:
+        check_if_user_over_18(user: CreditCardUser) -> bool: Check if the user is over 18 years old.
+        check_if_user_existing_customer(user: CreditCardUser) -> bool: Check if the user is an
+        existing customer.
+        check_user_credit_score(user: CreditCardUser) -> int: Check the credit score of the user.
+        check_if_user_approved(user: CreditCardUser) -> bool: Check if the user is approved.
+    """
+
+    @staticmethod
+    def check_if_user_over_18(user) -> bool:
+        """
+        Check if the user is over 18 years old.
+
+        Parameters:
+            user (CreditCardUser): The user to check the age.
+
+        Returns:
+            bool: True if the user is over 18, False otherwise.
+        """
         days_in_year = 365.2425
         age = (datetime.datetime.now().date() - user.date_of_birth).days / days_in_year
         if age < 18:
             return False
         return True
 
-    def check_existing_customer(user):
+    @staticmethod
+    def check_if_user_existing_customer(user) -> bool:
+        """
+        Check if the user is an existing customer.
+
+        Parameters:
+            user (CreditCardUser): The user to check if they are an existing customer.
+
+        Returns:
+            bool: True if the user is an existing customer, False otherwise."""
         return user.is_existing_customer
 
-    def check_credit_score(user):
-        supabase = init_app()
+    @staticmethod
+    def check_user_credit_score(user) -> int:
+        """
+        Check the credit score of the user by querying the Supabase database.
+
+        Parameters:
+            user (CreditCardUser): The user to check the credit score.
+
+        Returns:
+            int: The credit score of the user.
+        """
+        supabase = init_db()
         score = (
             supabase.table("credit_scores")
             .select("score")
@@ -24,15 +77,23 @@ class CreditApprovalChecker:
         )
         return score.data[0]["score"]
 
-    def check_approval(user):
-        print("ttest")
-        print(CreditApprovalChecker.check_credit_score(user))
-        if CreditApprovalChecker.check_existing_customer(user):
+    @staticmethod
+    def check_if_user_approved(user) -> bool:
+        """
+        Check if the user is approved based on the credit approval criteria.
+
+        Parameters:
+            user (CreditCardUser): The user to check the credit approval.
+
+        Returns:
+            bool: True if the user is approved, False otherwise.
+        """
+        if CreditApprovalChecker.check_if_user_existing_customer(user):
             return True
 
-        elif (
-            CreditApprovalChecker.check_user_over_18(user)
-            and CreditApprovalChecker.check_credit_score(user) >= 700
+        if (
+            CreditApprovalChecker.check_if_user_over_18(user)
+            and CreditApprovalChecker.check_user_credit_score(user) >= 700
         ):
             return True
         return False
