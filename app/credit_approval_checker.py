@@ -65,6 +65,8 @@ class CreditApprovalChecker:
             .eq("card_number", user.credit_card_number)
             .execute()
         )
+        print("HEREHEREHEREHERE")
+        print(score)
         return score.data[0]["score"]
 
     @staticmethod

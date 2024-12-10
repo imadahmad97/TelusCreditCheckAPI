@@ -24,7 +24,7 @@ from app.api_request_handler import handle_credit_check_request
 app = FastAPI()
 
 
-@app.get("/check_credit")
+@app.post("/check_credit")
 def credit_check_route(user: Annotated[CreditCardUser, Form()]) -> dict:
     """
     Function with the API endpoint to check the credit of a user.
