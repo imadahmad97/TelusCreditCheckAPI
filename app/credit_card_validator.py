@@ -27,7 +27,7 @@ class CreditCardValidator:
         the credit card.
         validate_credit_card_issuer(credit_card_user: CreditCardUser): Validates the credit card
         issuer.
-        validate(credit_card_user: CreditCardUser): Validates the credit card information by running
+        validate(credit_card_user: CreditCardUser) -> bool: Validates the credit card information by running
         all the validation methods.
     """
 

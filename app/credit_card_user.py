@@ -30,7 +30,8 @@ class CreditCardUser(BaseModel):
 
     Methods:
         parse_dates(): Parses the date of birth and expiration date
-        create_credit_card_user(): Creates a credit card user and parses the dates.
+        create_credit_card_user() -> CreditCardUser: Creates a credit card user and parses the
+        dates.
     """
 
     first_name: str
