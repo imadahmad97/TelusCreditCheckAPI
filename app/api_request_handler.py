@@ -3,21 +3,21 @@ This module contains the function to handle the credit check request. It runs ev
 /credit-check route is called.
 
 Functions:
-    handle_credit_check_request(user: CreditCardUser) -> dict: Function to handle the credit check 
-    request.
+    handle_credit_check_request(credit_approval_request: CreditApprovalRequest) -> dict: Function to
+    handle the credit check request.
     
 Dependencies:
-    - CreditCardUser
+    - CreditApprovalRequest
     - CreditCardValidator
     - CreditApprovalChecker
 """
 
+from .credit_approval_request import CreditApprovalRequest
 from .credit_card_validator import CreditCardValidator
-from .credit_card_user import CreditCardUser
 from .credit_approval_checker import CreditApprovalChecker
 
 
-def handle_credit_check_request(user: CreditCardUser) -> dict:
+def handle_credit_check_request(credit_approval_request: CreditApprovalRequest) -> dict:
     """
     Function to handle the credit check request. It creates a credit card user,
     validates the credit card, and checks the credit approval.
@@ -28,8 +28,8 @@ def handle_credit_check_request(user: CreditCardUser) -> dict:
     Returns:
         dict: The result of the credit check.
     """
-    CreditCardUser.create_credit_card_user(user)
-    CreditCardValidator.validate_credit_card(user)
-    if CreditApprovalChecker.check_if_user_approved(user):
+    CreditApprovalRequest.format_credit_approval_request(credit_approval_request)
+    CreditCardValidator.validate_credit_card(credit_approval_request)
+    if CreditApprovalChecker.check_if_user_approved(credit_approval_request):
         return {"credit_approval": "approved"}
     return {"credit_approval": "denied"}

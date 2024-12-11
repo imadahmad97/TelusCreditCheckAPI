@@ -8,7 +8,7 @@ Classes:
 Dependencies:
     - datetime
     - HTTPException
-    - CreditCardUser
+    - CreditApprovalRequest
 """
 
 import datetime
@@ -21,39 +21,41 @@ class CreditApprovalChecker:
     18, an existing customer, the credit score, and if the user is approved.
 
     Methods:
-        check_if_user_over_18(user: CreditCardUser) -> bool: Check if the user is over 18 years old.
-        check_user_credit_score(user: CreditCardUser) -> int: Check the credit score of the user.
-        check_user_credit_duration(user: CreditCardUser) -> int: Check the credit duration of the
+        check_if_user_over_18(user: CreditApprovalRequest) -> bool: Check if the user is over 18 years old.
+        check_user_credit_score(user: CreditApprovalRequest) -> int: Check the credit score of the user.
+        check_user_credit_duration(user: CreditApprovalRequest) -> int: Check the credit duration of the
         user.
         compare_score_and_duration(user_id: int) -> bool: Compare the credit score and duration of
         the user to the credit approval criteria.
-        check_if_user_approved(user: CreditCardUser) -> bool: Check if the user is approved.
+        check_if_user_approved(user: CreditApprovalRequest) -> bool: Check if the user is approved.
     """
 
     @staticmethod
-    def check_if_user_over_18(user) -> bool:
+    def check_if_user_over_18(credit_approval_request) -> bool:
         """
         Check if the user is over 18 years old.
 
         Parameters:
-            user (CreditCardUser): The user to check the age.
+            credit_approval_request(CreditApprovalRequest): The user to check the age.
 
         Returns:
             bool: True if the user is over 18, False otherwise.
         """
         days_in_year = 365.2425
-        age = (datetime.datetime.now().date() - user.date_of_birth).days / days_in_year
+        age = (
+            datetime.datetime.now().date() - credit_approval_request.date_of_birth
+        ).days / days_in_year
         if age < 18:
             return False
         return True
 
     @staticmethod
-    def check_user_credit_score(user) -> int:
+    def check_user_credit_score(credit_approval_request) -> int:
         """
         Check the credit score of the user by querying the Supabase database.
 
         Parameters:
-            user (CreditCardUser): The user to check the credit score for.
+            user (CreditApprovalRequest): The user to check the credit score for.
 
         Returns:
             int: The credit score of the user.
@@ -62,18 +64,18 @@ class CreditApprovalChecker:
         score = (
             supabase.table("credit_scores")
             .select("score")
-            .eq("card_number", user.credit_card_number)
+            .eq("card_number", credit_approval_request.credit_card_number)
             .execute()
         )
         return score.data[0]["score"]
 
     @staticmethod
-    def check_user_credit_duration(user) -> int:
+    def check_user_credit_duration(credit_approval_request) -> int:
         """
         Check the credit duration that the user has had credit by querying the Supabase database.
 
         Parameters:
-            user (CreditCardUser): The user to check the credit duration for.
+            user (CreditApprovalRequest): The user to check the credit duration for.
 
         Returns:
             float: The credit duration of the user (years).
@@ -82,7 +84,7 @@ class CreditApprovalChecker:
         duration = (
             supabase.table("credit_scores")
             .select("duration")
-            .eq("card_number", user.credit_card_number)
+            .eq("card_number", credit_approval_request.credit_card_number)
             .execute()
         )
         return duration.data[0]["duration"]
@@ -121,21 +123,21 @@ class CreditApprovalChecker:
         return False
 
     @staticmethod
-    def check_if_user_approved(user) -> bool:
+    def check_if_user_approved(credit_approval_request) -> bool:
         """
         Check if the user is approved based on the credit approval criteria.
 
         Parameters:
-            user (CreditCardUser): The user to check the credit approval.
+            user (CreditApprovalRequest): The user to check the credit approval.
 
         Returns:
             bool: True if the user is approved, False otherwise.
         """
-        if user.is_existing_customer:
+        if credit_approval_request.is_existing_customer:
             return True
 
         if CreditApprovalChecker.check_if_user_over_18(
-            user
-        ) and CreditApprovalChecker.compare_score_and_duration(user):
+            credit_approval_request
+        ) and CreditApprovalChecker.compare_score_and_duration(credit_approval_request):
             return True
         return False

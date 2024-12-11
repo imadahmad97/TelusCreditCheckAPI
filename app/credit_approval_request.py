@@ -1,9 +1,9 @@
 """
-A module for the CreditCardUser class. This class represents a single credit card user and contains
-methods to parse dates and create a credit card user.
+A module for the CreditApprovalRequest class. This class represents a single credit approval request
+and contains methods to parse dates and create a credit approval request.
 
 Classes:
-    CreditCardUser: A class to represent a single credit card user.
+    CreditApprovalRequest: A class to represent a single credit approval request.
 
 Dependencies:
     - datetime
@@ -14,9 +14,9 @@ import datetime
 from pydantic import BaseModel
 
 
-class CreditCardUser(BaseModel):
+class CreditApprovalRequest(BaseModel):
     """
-    A class to represent a single credit card user.
+    A class to represent a single credit approval request.
 
     Attributes:
         first_name (str): The first name of the user.
@@ -30,8 +30,8 @@ class CreditCardUser(BaseModel):
 
     Methods:
         parse_dates(): Parses the date of birth and expiration date
-        create_credit_card_user() -> CreditCardUser: Creates a credit card user and parses the
-        dates.
+        format_credit_approval_request() -> CreditApprovalRequest: Creates a credit approval request
+        and parses the dates.
     """
 
     first_name: str
@@ -53,12 +53,12 @@ class CreditCardUser(BaseModel):
         expiration_year, expiration_month = map(int, self.expiration_date.split("-"))
         self.expiration_date = datetime.date(expiration_year, expiration_month, 1)
 
-    def create_credit_card_user(self) -> "CreditCardUser":
+    def format_credit_approval_request(self) -> "CreditApprovalRequest":
         """
         Creates a credit card user and parses the dates by calling the parse_dates method.
 
         Returns:
-            CreditCardUser: A CreditCardUser object.
+            CreditApprovalRequest: A CreditApprovalRequest object.
         """
         self.convert_dob_and_expiration_to_datetime()
         return self
