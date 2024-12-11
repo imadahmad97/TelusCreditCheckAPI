@@ -5,10 +5,10 @@ check request.
 
 Functions:
     credit_check_route(credit_approval_request: Annotated[CreditApprovalRequest, Form()]) -> dict: 
-    The API endpoint to check the credit of a user.
+    The API endpoint to check approval status of a credit approval request.
 
 Endpoints:
-    /check_credit: The endpoint to check the credit of a credit approval request.
+    /check_credit: The endpoint to check the approval status of a credit approval request.
 
 Dependencies:
     - FastAPI
@@ -29,10 +29,10 @@ def credit_check_route(
     credit_approval_request: Annotated[CreditApprovalRequest, Form()]
 ) -> dict:
     """
-    Function with the API endpoint to check the credit of a user.
+    Function with the API endpoint to check the approval status of a credit approval request.
 
     Parameters:
-        user (CreditCardUser): The form data of the user to check the credit.
+        credit_approval_request (CreditApprovalRequest): Form data for the credit approval request.
 
     Returns:
         dict: The result of the credit check.

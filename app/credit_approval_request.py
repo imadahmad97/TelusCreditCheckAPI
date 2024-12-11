@@ -19,14 +19,19 @@ class CreditApprovalRequest(BaseModel):
     A class to represent a single credit approval request.
 
     Attributes:
-        first_name (str): The first name of the user.
-        last_name (str): The last name of the user.
-        date_of_birth (str | datetime.date): The date of birth of the user.
-        is_existing_customer (bool): A flag indicating if the user is an existing customer.
-        credit_card_number (str): The credit card number of the user.
-        expiration_date (str | datetime.date): The expiration date of the credit card.
-        cvv (str): The CVV of the credit card.
-        credit_card_issuer (str): The issuer of the credit card.
+        first_name (str): The first name of the user for whom the credit approval is requested.
+        last_name (str): The last name of the user for whom the credit approval is requested.
+        date_of_birth (str | datetime.date): The date of birth of the user for whom the credit
+        approval is requested.
+        is_existing_customer (bool): A flag indicating if the user for whom the credit approval
+        request is an existing customer.
+        credit_card_number (str): The credit card number of the user for whom the credit approval
+        is requested.
+        expiration_date (str | datetime.date): The expiration date of the credit card of the user
+        for whom the credit approval is requested.
+        cvv (str): The CVV of the credit card of the user for whom the credit approval is requested.
+        credit_card_issuer (str): The issuer of the credit card of the user for whom the credit
+        approval is requested.
 
     Methods:
         parse_dates(): Parses the date of birth and expiration date
@@ -45,7 +50,8 @@ class CreditApprovalRequest(BaseModel):
 
     def convert_dob_and_expiration_to_datetime(self):
         """
-        Parses the date of birth and expiration date from strings to datetime.date objects.
+        Parses the date of birth and expiration date in the credit approval request from strings to
+        datetime.date objects.
         """
         self.date_of_birth = datetime.datetime.strptime(
             self.date_of_birth, "%Y-%m-%d"
@@ -55,7 +61,7 @@ class CreditApprovalRequest(BaseModel):
 
     def format_credit_approval_request(self) -> "CreditApprovalRequest":
         """
-        Creates a credit card user and parses the dates by calling the parse_dates method.
+        Creates a credit approval request and parses the dates by calling the parse_dates method.
 
         Returns:
             CreditApprovalRequest: A CreditApprovalRequest object.

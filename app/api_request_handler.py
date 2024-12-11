@@ -19,11 +19,12 @@ from .credit_approval_checker import CreditApprovalChecker
 
 def handle_credit_check_request(credit_approval_request: CreditApprovalRequest) -> dict:
     """
-    Function to handle the credit check request. It creates a credit card user,
-    validates the credit card, and checks the credit approval.
+    Function to handle the credit check request. It formats a credit approval request, validates
+    the credit card, and checks the credit approval.
 
     Parameters:
-        user (CreditCardUser): The user to check the credit.
+        credit_approval_request (CreditApprovalRequest): The credit approval request to check the
+        approval status of.
 
     Returns:
         dict: The result of the credit check.

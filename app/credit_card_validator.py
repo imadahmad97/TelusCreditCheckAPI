@@ -37,7 +37,8 @@ class CreditCardValidator:
         Validates the length of the credit card number and CVV to be 16 and 3-4 digits respectively.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit card user to validate.
+            credit_approval_request (CreditApprovalRequest): The credit approval request to
+            validate.
 
         Raises:
             HTTPException: If the credit card number is not 16 digits or the CVV is not 3-4 digits.
@@ -53,7 +54,8 @@ class CreditCardValidator:
         Validates the expiration date of the credit card to be in the future.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit card user to validate.
+            credit_approval_request (CreditApprovalRequest): The credit approval request to
+            validate.
 
         Raises:
             HTTPException: If the credit card is expired.
@@ -67,7 +69,8 @@ class CreditCardValidator:
         Validates the credit card issuer to be Visa, MasterCard, or American Express.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit card user to validate.
+            credit_approval_request (CreditApprovalRequest): The credit approval request to
+            validate.
 
         Raises:
             HTTPException: If the credit card issuer is not Visa, MasterCard, or American Express.
@@ -85,7 +88,8 @@ class CreditCardValidator:
         Validates the credit card information by running all the validation methods.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit card user to validate.
+            credit_approval_request (CreditApprovalRequest): The credit approval request to
+            validate.
 
         Returns:
             bool: True if the credit card information is valid.
