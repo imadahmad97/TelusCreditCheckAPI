@@ -32,7 +32,7 @@ class CreditCardValidator:
     """
 
     @staticmethod
-    def validate_number_lengths(credit_card_user: CreditCardUser):
+    def validate_card_number_lengths(credit_card_user: CreditCardUser):
         """
         Validates the length of the credit card number and CVV to be 16 and 3-4 digits respectively.
 
@@ -48,7 +48,7 @@ class CreditCardValidator:
             raise HTTPException(status_code=400, detail="CVV must be 3 or 4 digits")
 
     @staticmethod
-    def validate_expiration_date(credit_card_user: CreditCardUser):
+    def validate_card_expiration_date(credit_card_user: CreditCardUser):
         """
         Validates the expiration date of the credit card to be in the future.
 
@@ -80,7 +80,7 @@ class CreditCardValidator:
             raise HTTPException(status_code=400, detail="Invalid credit card issuer")
 
     @staticmethod
-    def validate(credit_card_user: CreditCardUser):
+    def validate_credit_card(credit_card_user: CreditCardUser):
         """
         Validates the credit card information by running all the validation methods.
 
@@ -90,7 +90,7 @@ class CreditCardValidator:
         Returns:
             bool: True if the credit card information is valid.
         """
-        CreditCardValidator.validate_number_lengths(credit_card_user)
-        CreditCardValidator.validate_expiration_date(credit_card_user)
+        CreditCardValidator.validate_card_number_lengths(credit_card_user)
+        CreditCardValidator.validate_card_expiration_date(credit_card_user)
         CreditCardValidator.validate_credit_card_issuer(credit_card_user)
         return True

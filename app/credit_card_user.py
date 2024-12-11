@@ -43,7 +43,7 @@ class CreditCardUser(BaseModel):
     cvv: str
     credit_card_issuer: str
 
-    def parse_dates(self):
+    def convert_dob_and_expiration_to_datetime(self):
         """
         Parses the date of birth and expiration date from strings to datetime.date objects.
         """
@@ -60,5 +60,5 @@ class CreditCardUser(BaseModel):
         Returns:
             CreditCardUser: A CreditCardUser object.
         """
-        self.parse_dates()
+        self.convert_dob_and_expiration_to_datetime()
         return self
