@@ -14,6 +14,7 @@ Dependencies:
 
 from .credit_approval_request import CreditApprovalRequest
 from .credit_card_validator import CreditCardValidator
+from .luhn_algorithm_valdiator import LuhnAlgorithmImplementation
 from .credit_approval_checker import CreditApprovalChecker
 
 
@@ -34,6 +35,11 @@ def handle_credit_check_request(credit_approval_request: CreditApprovalRequest) 
     CreditCardValidator.validate_credit_card_from_credit_approval_request(
         credit_approval_request
     )
+
+    LuhnAlgorithmImplementation.perform_luhn_check_on_credit_approval_request(
+        credit_approval_request
+    )
+
     if CreditApprovalChecker.check_credit_approval_request_result(
         credit_approval_request
     ):

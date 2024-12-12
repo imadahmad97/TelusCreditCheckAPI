@@ -45,8 +45,10 @@ class CreditCardValidator:
         Raises:
             HTTPException: If the credit card number is not 16 digits or the CVV is not 3-4 digits.
         """
-        if len(credit_approval_request.credit_card_number) != 16:
-            raise HTTPException(status_code=400, detail="Card number must be 16 digits")
+        if not 8 <= len(credit_approval_request.credit_card_number) <= 19:
+            raise HTTPException(
+                status_code=400, detail="Card number must be between 8 and 19 digits"
+            )
         if not 3 <= len(credit_approval_request.cvv) <= 4:
             raise HTTPException(status_code=400, detail="CVV must be 3 or 4 digits")
 

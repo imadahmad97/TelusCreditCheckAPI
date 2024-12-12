@@ -41,7 +41,7 @@ base_data = {
     "last_name": "Doe",
     "date_of_birth": "2000-01-01",
     "is_existing_customer": False,
-    "credit_card_number": "1111222233334444",
+    "credit_card_number": "4929439557473282537",
     "expiration_date": "2027-08",
     "cvv": "123",
     "credit_card_issuer": "Visa",
@@ -75,7 +75,7 @@ def test_credit_check_route_missing_fields():
     assert response.status_code == 422
 
 
-def test_credit_check_route_invalid_card_number():
+def test_credit_check_route_invalid_card_number_length():
     """
     Test case to check if the credit check route returns the expected response when an invalid card
     number is provided.
@@ -85,11 +85,31 @@ def test_credit_check_route_invalid_card_number():
         - The response is as expected
     """
     data = base_data.copy()
-    data["credit_card_number"] = "12345678901234565"
+    data["credit_card_number"] = "12345678901234565891"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "Card number must be 16 digits",
+        "detail": "Card number must be between 8 and 19 digits",
+    }
+
+
+def test_credit_check_route_invalid_cvv_length():
+    data = base_data.copy()
+    data["cvv"] = "12345"
+    response = client.post("/check_credit", data=data)
+    assert response.status_code == 400
+    assert response.json() == {
+        "detail": "CVV must be 3 or 4 digits",
+    }
+
+
+def test_credit_check_route_invalid_card_number():
+    data = base_data.copy()
+    data["credit_card_number"] = "1234567890123456"
+    response = client.post("/check_credit", data=data)
+    assert response.status_code == 400
+    assert response.json() == {
+        "detail": "Credit card number is invalid",
     }
 
 
@@ -104,7 +124,7 @@ def test_existing_customer_always_approved():
     """
     data = base_data.copy()
     data["is_existing_customer"] = True
-    data["credit_card_number"] = "1111222233334444"
+    data["credit_card_number"] = "373337942404166"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -120,7 +140,7 @@ def test_score_800_always_approved():
         - The response is an approval
     """
     data = base_data.copy()
-    data["credit_card_number"] = "1234567891234567"
+    data["credit_card_number"] = "5127626881039365"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -169,7 +189,7 @@ def test_score_350_duration_10():
         - The response is an approval
     """
     data = base_data.copy()
-    data["credit_card_number"] = "0637427684924651"
+    data["credit_card_number"] = "4929439557473282537"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -185,7 +205,7 @@ def test_score_350_duration_9():
         - The response is a denial
     """
     data = base_data.copy()
-    data["credit_card_number"] = "8938533129388817"
+    data["credit_card_number"] = "373337942404166"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "denied"}
@@ -201,7 +221,7 @@ def test_score_550_duration_7():
         - The response is an approval
     """
     data = base_data.copy()
-    data["credit_card_number"] = "6006744823964515"
+    data["credit_card_number"] = "349577280889988"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -217,7 +237,7 @@ def test_score_550_duration_6():
         - The response is a denial
     """
     data = base_data.copy()
-    data["credit_card_number"] = "3821114600535667"
+    data["credit_card_number"] = "379765683272919"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "denied"}
@@ -233,7 +253,7 @@ def test_score_650_duration_5():
         - The response is an approval
     """
     data = base_data.copy()
-    data["credit_card_number"] = "8044471595464609"
+    data["credit_card_number"] = "6011693232839786565"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -249,7 +269,7 @@ def test_score_650_duration_4():
         - The response is a denial
     """
     data = base_data.copy()
-    data["credit_card_number"] = "8009978420510579"
+    data["credit_card_number"] = "6011775597776401"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "denied"}
@@ -265,7 +285,7 @@ def test_score_725_duration_3():
         - The response is an approval
     """
     data = base_data.copy()
-    data["credit_card_number"] = "0047057200562728"
+    data["credit_card_number"] = "4916159168643657"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -281,7 +301,7 @@ def test_score_725_duration_2():
         - The response is a denial
     """
     data = base_data.copy()
-    data["credit_card_number"] = "0118448060070548"
+    data["credit_card_number"] = "4058617700662392"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "denied"}
@@ -297,7 +317,7 @@ def test_score_775_duration_1():
         - The response is an approval
     """
     data = base_data.copy()
-    data["credit_card_number"] = "1234567891234567"
+    data["credit_card_number"] = "5510642096381885"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "approved"}
@@ -313,7 +333,7 @@ def test_score_775_duration_0():
         - The response is a denial
     """
     data = base_data.copy()
-    data["credit_card_number"] = "2468123456789999"
+    data["credit_card_number"] = "2221005919057420"
     response = client.post("/check_credit", data=data)
     assert response.status_code == 200
     assert response.json() == {"credit_approval": "denied"}
