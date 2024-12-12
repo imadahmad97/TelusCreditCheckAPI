@@ -32,7 +32,9 @@ class CreditCardValidator:
     """
 
     @staticmethod
-    def validate_card_number_lengths(credit_approval_request: CreditApprovalRequest):
+    def _validate_card_number_lengths_from_credit_approval_request(
+        credit_approval_request: CreditApprovalRequest,
+    ):
         """
         Validates the length of the credit card number and CVV to be 16 and 3-4 digits respectively.
 
@@ -49,7 +51,9 @@ class CreditCardValidator:
             raise HTTPException(status_code=400, detail="CVV must be 3 or 4 digits")
 
     @staticmethod
-    def validate_card_expiration_date(credit_approval_request: CreditApprovalRequest):
+    def _validate_card_expiration_date_from_credit_approval_request(
+        credit_approval_request: CreditApprovalRequest,
+    ):
         """
         Validates the expiration date of the credit card to be in the future.
 
@@ -64,7 +68,9 @@ class CreditCardValidator:
             raise HTTPException(status_code=400, detail="Card is expired")
 
     @staticmethod
-    def validate_credit_card_issuer(credit_approval_request: CreditApprovalRequest):
+    def _validate_credit_card_issuer_from_credit_approval_request(
+        credit_approval_request: CreditApprovalRequest,
+    ):
         """
         Validates the credit card issuer to be Visa, MasterCard, or American Express.
 
@@ -83,7 +89,9 @@ class CreditCardValidator:
             raise HTTPException(status_code=400, detail="Invalid credit card issuer")
 
     @staticmethod
-    def validate_credit_card(credit_approval_request: CreditApprovalRequest):
+    def validate_credit_card_from_credit_approval_request(
+        credit_approval_request: CreditApprovalRequest,
+    ):
         """
         Validates the credit card information by running all the validation methods.
 
@@ -94,7 +102,13 @@ class CreditCardValidator:
         Returns:
             bool: True if the credit card information is valid.
         """
-        CreditCardValidator.validate_card_number_lengths(credit_approval_request)
-        CreditCardValidator.validate_card_expiration_date(credit_approval_request)
-        CreditCardValidator.validate_credit_card_issuer(credit_approval_request)
+        CreditCardValidator._validate_card_number_lengths_from_credit_approval_request(
+            credit_approval_request
+        )
+        CreditCardValidator._validate_card_expiration_date_from_credit_approval_request(
+            credit_approval_request
+        )
+        CreditCardValidator._validate_credit_card_issuer_from_credit_approval_request(
+            credit_approval_request
+        )
         return True

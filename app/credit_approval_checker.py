@@ -11,6 +11,7 @@ Dependencies:
     - CreditApprovalRequest
 """
 
+import os
 import datetime
 from . import init_db
 
@@ -31,7 +32,9 @@ class CreditApprovalChecker:
     """
 
     @staticmethod
-    def check_if_user_over_18(credit_approval_request) -> bool:
+    def _check_if_creditee_is_at_least_18_years_old_from_credit_approval_request(
+        credit_approval_request,
+    ) -> bool:
         """
         Check if the user is over 18 years old.
 
@@ -41,16 +44,15 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is over 18, False otherwise.
         """
-        days_in_year = 365.2425
         age = (
             datetime.datetime.now().date() - credit_approval_request.date_of_birth
-        ).days / days_in_year
-        if age < 18:
+        ).days / float(os.getenv("DAYS_IN_YEAR"))
+        if age < int(os.getenv("LEGAL_AGE")):
             return False
         return True
 
     @staticmethod
-    def check_user_credit_score(credit_approval_request) -> int:
+    def _check_credit_score_for_credit_approval_request(credit_approval_request) -> int:
         """
         Check the credit score of the user by querying the Supabase database.
 
@@ -70,7 +72,9 @@ class CreditApprovalChecker:
         return score.data[0]["score"]
 
     @staticmethod
-    def check_user_credit_duration(credit_approval_request) -> int:
+    def _check_credit_duration_for_credit_approval_request(
+        credit_approval_request,
+    ) -> int:
         """
         Check the credit duration that the user has had credit by querying the Supabase database.
 
@@ -90,7 +94,7 @@ class CreditApprovalChecker:
         return duration.data[0]["duration"]
 
     @staticmethod
-    def compare_score_and_duration(user_id):
+    def _check_if_credit_score_and_credit_duration_within_approval_limits(user_id):
         """
         Compare the credit score and duration of the user to the credit approval criteria.
 
@@ -100,8 +104,16 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is approved, False otherwise.
         """
-        credit_score = CreditApprovalChecker.check_user_credit_score(user_id)
-        credit_duration = CreditApprovalChecker.check_user_credit_duration(user_id)
+        credit_score = (
+            CreditApprovalChecker._check_credit_score_for_credit_approval_request(
+                user_id
+            )
+        )
+        credit_duration = (
+            CreditApprovalChecker._check_credit_duration_for_credit_approval_request(
+                user_id
+            )
+        )
 
         credit_criteria = {
             "poor": {"range": (300, 499), "min_duration": 10},
@@ -123,7 +135,7 @@ class CreditApprovalChecker:
         return False
 
     @staticmethod
-    def check_if_user_approved(credit_approval_request) -> bool:
+    def check_credit_approval_request_result(credit_approval_request) -> bool:
         """
         Check if the user is approved based on the credit approval criteria.
 
@@ -136,8 +148,10 @@ class CreditApprovalChecker:
         if credit_approval_request.is_existing_customer:
             return True
 
-        if CreditApprovalChecker.check_if_user_over_18(
+        if CreditApprovalChecker._check_if_creditee_is_at_least_18_years_old_from_credit_approval_request(
             credit_approval_request
-        ) and CreditApprovalChecker.compare_score_and_duration(credit_approval_request):
+        ) and CreditApprovalChecker._check_if_credit_score_and_credit_duration_within_approval_limits(
+            credit_approval_request
+        ):
             return True
         return False
