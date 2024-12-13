@@ -21,6 +21,7 @@ from .credit_approval_request import CreditApprovalRequest
 from .credit_card_validator import CreditCardValidator
 from .database_methods import DataBaseService
 from .credit_approval_checker import CreditApprovalChecker
+from .luhn_algorithm_valdiator import LuhnAlgorithmImplementation
 
 
 class CreditCheckRequestHandler:
@@ -37,7 +38,7 @@ class CreditCheckRequestHandler:
     """
 
     @staticmethod
-    def _run_credit_check_process(
+    def _execute_credit_approval_request_validation_steps(
         credit_approval_request: CreditApprovalRequest,
     ) -> None:
         """
@@ -47,14 +48,18 @@ class CreditCheckRequestHandler:
         Parameters:
             credit_approval_request (CreditApprovalRequest): The credit approval request to check.
         """
-        CreditApprovalRequest.format_credit_approval_request(credit_approval_request)
+        CreditApprovalRequest.convert_dob_and_expiration_from_string_to_datetime(
+            credit_approval_request
+        )
 
-        CreditCardValidator.validate_credit_card_from_credit_approval_request(
+        CreditCardValidator.validate_credit_card(credit_approval_request)
+
+        LuhnAlgorithmImplementation.perform_luhn_check_on_credit_approval_request(
             credit_approval_request
         )
 
     @staticmethod
-    def return_credit_check_result(
+    def process_and_return_credit_check_result(
         credit_approval_request: CreditApprovalRequest,
     ) -> dict:
         """
@@ -67,7 +72,9 @@ class CreditCheckRequestHandler:
         Returns:
             dict: The result of the credit check process.
         """
-        CreditCheckRequestHandler._run_credit_check_process(credit_approval_request)
+        CreditCheckRequestHandler._execute_credit_approval_request_validation_steps(
+            credit_approval_request
+        )
 
         if credit_approval_request.errors != "":
             DataBaseService().record_credit_approval_request_transaction(

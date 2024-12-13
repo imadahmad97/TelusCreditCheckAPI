@@ -1,10 +1,9 @@
 from .credit_approval_request import CreditApprovalRequest
-from fastapi import HTTPException
 
 
 class LuhnAlgorithmImplementation:
     @staticmethod
-    def _split_odd_and_even_digits(
+    def _separate_digits_by_position(
         credit_approval_request: CreditApprovalRequest,
     ) -> tuple:
         raw_odd_digits = []
@@ -32,7 +31,7 @@ class LuhnAlgorithmImplementation:
         return doubled_even_digits
 
     @staticmethod
-    def _perform_luhn_reduction_step_on_doubled_even_digits(
+    def _luhn_reduction_step(
         doubled_even_digits: list,
     ) -> list:
         reduced_even_digits = []
@@ -49,14 +48,14 @@ class LuhnAlgorithmImplementation:
         credit_approval_request: CreditApprovalRequest,
     ) -> bool:
         odd_digits, even_digits = (
-            LuhnAlgorithmImplementation._split_odd_and_even_digits(
+            LuhnAlgorithmImplementation._separate_digits_by_position(
                 credit_approval_request
             )
         )
         doubled_even_digits = LuhnAlgorithmImplementation._double_even_digits(
             even_digits
         )
-        reduced_even_digits = LuhnAlgorithmImplementation._perform_luhn_reduction_step_on_doubled_even_digits(
+        reduced_even_digits = LuhnAlgorithmImplementation._luhn_reduction_step(
             doubled_even_digits
         )
         if (sum(odd_digits) + sum(reduced_even_digits)) % 10 != 0:

@@ -9,12 +9,10 @@ Classes:
 Dependencies:
     - datetime: The module supplies classes for manipulating dates and times.
     - CreditApprovalRequest: The class representing a credit approval request.
-    - LuhnAlgorithmImplementation: The class to perform the Luhn algorithm check.
 """
 
 import datetime
 from .credit_approval_request import CreditApprovalRequest
-from .luhn_algorithm_valdiator import LuhnAlgorithmImplementation
 
 
 class CreditCardValidator:
@@ -40,7 +38,7 @@ class CreditCardValidator:
     """
 
     @staticmethod
-    def _validate_card_number_lengths_from_credit_approval_request(
+    def _validate_card_number_lengths(
         credit_approval_request: CreditApprovalRequest,
     ):
         """
@@ -59,7 +57,7 @@ class CreditCardValidator:
             credit_approval_request.errors += "400: CVV must be 3 or 4 digits; "
 
     @staticmethod
-    def _validate_card_expiration_date_from_credit_approval_request(
+    def _validate_card_expiration_date(
         credit_approval_request: CreditApprovalRequest,
     ):
         """
@@ -74,7 +72,7 @@ class CreditCardValidator:
             credit_approval_request.errors += "400: Card is expired; "
 
     @staticmethod
-    def _validate_credit_card_issuer_from_credit_approval_request(
+    def _validate_credit_card_issuer(
         credit_approval_request: CreditApprovalRequest,
     ):
         """
@@ -93,7 +91,7 @@ class CreditCardValidator:
             credit_approval_request.errors += "400: Invalid credit card issuer; "
 
     @staticmethod
-    def validate_credit_card_from_credit_approval_request(
+    def validate_credit_card(
         credit_approval_request: CreditApprovalRequest,
     ):
         """
@@ -108,16 +106,7 @@ class CreditCardValidator:
         Returns:
             bool: True if the credit card information is valid.
         """
-        CreditCardValidator._validate_card_number_lengths_from_credit_approval_request(
-            credit_approval_request
-        )
-        CreditCardValidator._validate_card_expiration_date_from_credit_approval_request(
-            credit_approval_request
-        )
-        CreditCardValidator._validate_credit_card_issuer_from_credit_approval_request(
-            credit_approval_request
-        )
-        LuhnAlgorithmImplementation.perform_luhn_check_on_credit_approval_request(
-            credit_approval_request
-        )
+        CreditCardValidator._validate_card_number_lengths(credit_approval_request)
+        CreditCardValidator._validate_card_expiration_date(credit_approval_request)
+        CreditCardValidator._validate_credit_card_issuer(credit_approval_request)
         return True

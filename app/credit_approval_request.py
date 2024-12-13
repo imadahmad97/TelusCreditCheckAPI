@@ -51,7 +51,7 @@ class CreditApprovalRequest(BaseModel):
     credit_card_issuer: str
     errors: str = ""
 
-    def _convert_dob_and_expiration_from_string_to_datetime(self):
+    def convert_dob_and_expiration_from_string_to_datetime(self):
         """
         Parses the date of birth and expiration date in the credit approval request from strings to
         datetime.date objects.
@@ -61,13 +61,4 @@ class CreditApprovalRequest(BaseModel):
         ).date()
         expiration_year, expiration_month = map(int, self.expiration_date.split("-"))
         self.expiration_date = datetime.date(expiration_year, expiration_month, 1)
-
-    def format_credit_approval_request(self) -> "CreditApprovalRequest":
-        """
-        Takes a credit approval request and parses the dates by calling the parse_dates method.
-
-        Returns:
-            CreditApprovalRequest: A CreditApprovalRequest object.
-        """
-        self._convert_dob_and_expiration_from_string_to_datetime()
         return self

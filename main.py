@@ -37,4 +37,6 @@ def credit_check_route(
     Returns:
         dict: The result of the credit check.
     """
-    return CreditCheckRequestHandler.return_credit_check_result(credit_approval_request)
+    return CreditCheckRequestHandler.process_and_return_credit_check_result(
+        credit_approval_request
+    )
