@@ -1,3 +1,4 @@
+import os
 from .credit_approval_request import CreditApprovalRequest
 
 
@@ -58,6 +59,8 @@ class LuhnAlgorithmImplementation:
         reduced_even_digits = LuhnAlgorithmImplementation._luhn_reduction_step(
             doubled_even_digits
         )
-        if (sum(odd_digits) + sum(reduced_even_digits)) % 10 != 0:
+        if (sum(odd_digits) + sum(reduced_even_digits)) % int(
+            os.getenv("LUHN_MODULUS")
+        ) != 0:
             credit_approval_request.errors += "400: Invalid credit card number; "
             return False

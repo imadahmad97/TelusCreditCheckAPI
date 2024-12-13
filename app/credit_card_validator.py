@@ -12,6 +12,7 @@ Dependencies:
 """
 
 import datetime
+import os
 from .credit_approval_request import CreditApprovalRequest
 
 
@@ -49,11 +50,19 @@ class CreditCardValidator:
             credit_approval_request (CreditApprovalRequest): The credit approval request to
             validate.
         """
-        if not 8 <= len(credit_approval_request.credit_card_number) <= 19:
+        if (
+            not int(os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH"))
+            <= len(credit_approval_request.credit_card_number)
+            <= int(os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH"))
+        ):
             credit_approval_request.errors += (
                 "400: Card number must be between 8 and 19 digits; "
             )
-        if not 3 <= len(credit_approval_request.cvv) <= 4:
+        if (
+            not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH"))
+            <= len(credit_approval_request.cvv)
+            <= int(os.getenv("MAXIMUM_CREDIT_CARD_CVV_LENGTH"))
+        ):
             credit_approval_request.errors += "400: CVV must be 3 or 4 digits; "
 
     @staticmethod

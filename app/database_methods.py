@@ -1,4 +1,5 @@
 import random
+import os
 from . import init_db
 from .credit_approval_request import CreditApprovalRequest
 
@@ -28,7 +29,10 @@ class DataBaseService:
         try:
             return score.data[0]["score"]
         except IndexError:
-            return random.randint(300, 851)
+            return random.randint(
+                int(os.getenv("RANDOM_CREDIT_SCORE_MIN")),
+                int(os.getenv("RANDOM_CREDIT_SCORE_MAX")),
+            )
 
     def check_credit_duration_for_credit_approval_request(
         self,
@@ -52,7 +56,10 @@ class DataBaseService:
         try:
             return duration.data[0]["duration"]
         except IndexError:
-            return random.randint(0, 11)
+            return random.randint(
+                int(os.getenv("RANDOM_CREDIT_DURATION_MIN")),
+                int(os.getenv("RANDOM_CREDIT_DURATION_MAX")),
+            )
 
     def record_credit_approval_request_transaction(
         self,

@@ -53,12 +53,48 @@ class CreditApprovalChecker:
         )
 
         credit_criteria = {
-            "poor": {"range": (300, 499), "min_duration": 10},
-            "fair": {"range": (500, 599), "min_duration": 7},
-            "good": {"range": (600, 699), "min_duration": 5},
-            "very_good": {"range": (700, 749), "min_duration": 3},
-            "excellent": {"range": (750, 799), "min_duration": 1},
-            "exceptional": {"range": (800, 850), "min_duration": 0},
+            "poor": {
+                "range": (
+                    int(os.getenv("POOR_CREDIT_MIN")),
+                    int(os.getenv("POOR_CREDIT_MAX")),
+                ),
+                "min_duration": int(os.getenv("POOR_CREDIT_MIN_DURATION")),
+            },
+            "fair": {
+                "range": (
+                    int(os.getenv("FAIR_CREDIT_MIN")),
+                    int(os.getenv("FAIR_CREDIT_MAX")),
+                ),
+                "min_duration": int(os.getenv("FAIR_CREDIT_MIN_DURATION")),
+            },
+            "good": {
+                "range": (
+                    int(os.getenv("GOOD_CREDIT_MIN")),
+                    int(os.getenv("GOOD_CREDIT_MAX")),
+                ),
+                "min_duration": int(os.getenv("GOOD_CREDIT_MIN_DURATION")),
+            },
+            "very_good": {
+                "range": (
+                    int(os.getenv("VERY_GOOD_CREDIT_MIN")),
+                    int(os.getenv("VERY_GOOD_CREDIT_MAX")),
+                ),
+                "min_duration": int(os.getenv("VERY_GOOD_CREDIT_MIN_DURATION")),
+            },
+            "excellent": {
+                "range": (
+                    int(os.getenv("EXCELLENT_CREDIT_MIN")),
+                    int(os.getenv("EXCELLENT_CREDIT_MAX")),
+                ),
+                "min_duration": int(os.getenv("EXCELLENT_CREDIT_MIN_DURATION")),
+            },
+            "exceptional": {
+                "range": (
+                    int(os.getenv("EXCEPTIONAL_CREDIT_MIN")),
+                    int(os.getenv("EXCEPTIONAL_CREDIT_MAX")),
+                ),
+                "min_duration": int(os.getenv("EXCEPTIONAL_CREDIT_MIN_DURATION")),
+            },
         }
 
         for criteria in credit_criteria.values():
