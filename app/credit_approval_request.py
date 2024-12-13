@@ -61,4 +61,3 @@ class CreditApprovalRequest(BaseModel):
         ).date()
         expiration_year, expiration_month = map(int, self.expiration_date.split("-"))
         self.expiration_date = datetime.date(expiration_year, expiration_month, 1)
-        return self

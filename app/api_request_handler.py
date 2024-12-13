@@ -38,7 +38,7 @@ class CreditCheckRequestHandler:
     """
 
     @staticmethod
-    def _execute_credit_approval_request_validation_steps(
+    def _process_credit_approval_request(
         credit_approval_request: CreditApprovalRequest,
     ) -> None:
         """
@@ -59,7 +59,7 @@ class CreditCheckRequestHandler:
         )
 
     @staticmethod
-    def process_and_return_credit_check_result(
+    def _return_credit_check_result(
         credit_approval_request: CreditApprovalRequest,
     ) -> dict:
         """
@@ -72,10 +72,6 @@ class CreditCheckRequestHandler:
         Returns:
             dict: The result of the credit check process.
         """
-        CreditCheckRequestHandler._execute_credit_approval_request_validation_steps(
-            credit_approval_request
-        )
-
         if credit_approval_request.errors != "":
             DataBaseService().record_credit_approval_request_transaction(
                 credit_approval_request, errors=credit_approval_request.errors
@@ -94,3 +90,23 @@ class CreditCheckRequestHandler:
             credit_approval_request, approved=False
         )
         return {"credit_approval": "denied"}
+
+    @staticmethod
+    def process_and_return_credit_check_result(
+        credit_approval_request: CreditApprovalRequest,
+    ) -> dict:
+        """
+        Process the credit approval request and return the result of the credit check process.
+
+        Parameters:
+            credit_approval_request (CreditApprovalRequest): The credit approval request to check.
+
+        Returns:
+            dict: The result of the credit check process.
+        """
+        CreditCheckRequestHandler._process_credit_approval_request(
+            credit_approval_request
+        )
+        return CreditCheckRequestHandler._return_credit_check_result(
+            credit_approval_request
+        )

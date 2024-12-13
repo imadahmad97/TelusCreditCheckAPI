@@ -1,12 +1,46 @@
+"""
+This module contains the implementation of the Luhn algorithm for credit card number validation.
+
+Classes:
+    LuhnAlgorithmImplementation
+    
+Dependencies:
+    - os: This module provides a way to work with operating system dependent functionality.
+    - CreditApprovalRequest: The class representing a credit approval request.
+"""
+
 import os
 from .credit_approval_request import CreditApprovalRequest
 
 
 class LuhnAlgorithmImplementation:
+    """
+    This class contains the implementation of the Luhn algorithm for credit card number validation.
+
+    Methods:
+        _separate_digits_by_position(credit_approval_request): Separate credit card number digits
+            by position into odd and even digits.
+        _double_even_digits(odd_digits): Double the even digits of the credit card number.
+        _luhn_reduction_step(doubled_even_digits): Perform the Luhn reduction step on the doubled
+            even digits.
+        perform_luhn_check_on_credit_approval_request(credit_approval_request): Perform the Luhn
+            algorithm check on the credit card number of the credit approval request.
+    """
+
     @staticmethod
     def _separate_digits_by_position(
         credit_approval_request: CreditApprovalRequest,
     ) -> tuple:
+        """
+        Separate the credit card number digits by position into odd and even digits.
+
+        Parameters:
+            credit_approval_request (CreditApprovalRequest): The credit approval request to separate
+                the digits from.
+
+        Returns:
+            tuple: A tuple containing the odd and even digits of the credit card number.
+        """
         raw_odd_digits = []
         raw_even_digits = []
         i = 1
@@ -26,6 +60,14 @@ class LuhnAlgorithmImplementation:
 
     @staticmethod
     def _double_even_digits(odd_digits: list) -> list:
+        """
+        Double the even digits of the credit card number.
+
+        Parameters:
+            odd_digits (list): The list of odd digits of the credit card number.
+
+        Returns:
+            list: The list of doubled even digits of the credit card number."""
         doubled_even_digits = []
         for digit in odd_digits:
             doubled_even_digits.append(digit * 2)
@@ -35,6 +77,15 @@ class LuhnAlgorithmImplementation:
     def _luhn_reduction_step(
         doubled_even_digits: list,
     ) -> list:
+        """
+        Perform the Luhn reduction step on the doubled even digits.
+
+        Parameters:
+            doubled_even_digits (list): The list of doubled even digits of the credit card number.
+
+        Returns:
+            list: The list of reduced even digits after the Luhn reduction step.
+        """
         reduced_even_digits = []
         for number in doubled_even_digits:
             if len(str(number)) == 2:
@@ -48,6 +99,16 @@ class LuhnAlgorithmImplementation:
     def perform_luhn_check_on_credit_approval_request(
         credit_approval_request: CreditApprovalRequest,
     ) -> bool:
+        """
+        Perform the Luhn algorithm check on the credit card number of the credit approval request.
+
+        Parameters:
+            credit_approval_request (CreditApprovalRequest): The credit approval request to check.
+
+        Returns:
+            bool: True if the credit card number is valid according to the Luhn algorithm, False
+                otherwise.
+        """
         odd_digits, even_digits = (
             LuhnAlgorithmImplementation._separate_digits_by_position(
                 credit_approval_request

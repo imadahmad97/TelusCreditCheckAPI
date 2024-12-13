@@ -111,11 +111,7 @@ class CreditCardValidator:
         Parameters:
             credit_approval_request (CreditApprovalRequest): The credit approval request to
             validate.
-
-        Returns:
-            bool: True if the credit card information is valid.
         """
         CreditCardValidator._validate_card_number_lengths(credit_approval_request)
         CreditCardValidator._validate_card_expiration_date(credit_approval_request)
         CreditCardValidator._validate_credit_card_issuer(credit_approval_request)
-        return True
