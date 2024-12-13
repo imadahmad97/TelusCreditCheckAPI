@@ -1,43 +1,21 @@
 """
-A module to validate credit card information. It contains the CreditCardValidator class with methods
-to validate the credit card number, expiration date, and issuer.
 
-Classes:
-    CreditCardValidator: A class to validate credit card information.
-    
-Dependencies:
-    - datetime
-    - HTTPException
-    - CreditApprovalRequest
 """
 
 import os
 import datetime
-import random
-from . import init_db
+from .database_methods import DataBaseService
 
 
 class CreditApprovalChecker:
-    """
-    A class to check the credit approval of a user. It contains methods to check if the user is over
-    18, an existing customer, the credit score, and if the user is approved.
-
-    Methods:
-        check_if_user_over_18(user: CreditApprovalRequest) -> bool: Check if the user is over 18 years old.
-        check_user_credit_score(user: CreditApprovalRequest) -> int: Check the credit score of the user.
-        check_user_credit_duration(user: CreditApprovalRequest) -> int: Check the credit duration of the
-        user.
-        compare_score_and_duration(user_id: int) -> bool: Compare the credit score and duration of
-        the user to the credit approval criteria.
-        check_if_user_approved(user: CreditApprovalRequest) -> bool: Check if the user is approved.
-    """
+    """ """
 
     @staticmethod
-    def _check_if_creditee_is_at_least_18_years_old_from_credit_approval_request(
+    def _check_if_creditee_is_of_legal_age_from_credit_approval_request(
         credit_approval_request,
     ) -> bool:
         """
-        Check if the user is over 18 years old.
+        Check if the user is of legal age from the credit approval request.
 
         Parameters:
             credit_approval_request(CreditApprovalRequest): The user to check the age.
@@ -53,57 +31,11 @@ class CreditApprovalChecker:
         return True
 
     @staticmethod
-    def _check_credit_score_for_credit_approval_request(credit_approval_request) -> int:
-        """
-        Check the credit score of the user by querying the Supabase database.
-
-        Parameters:
-            user (CreditApprovalRequest): The user to check the credit score for.
-
-        Returns:
-            int: The credit score of the user.
-        """
-        supabase = init_db()
-        score = (
-            supabase.table("credit_scores")
-            .select("score")
-            .eq("card_number", credit_approval_request.credit_card_number)
-            .execute()
-        )
-        try:
-            return score.data[0]["score"]
-        except IndexError:
-            return random.randint(300, 851)
-
-    @staticmethod
-    def _check_credit_duration_for_credit_approval_request(
+    def _check_if_credit_score_and_credit_duration_within_approval_limits(
         credit_approval_request,
-    ) -> int:
+    ) -> bool:
         """
-        Check the credit duration that the user has had credit by querying the Supabase database.
-
-        Parameters:
-            user (CreditApprovalRequest): The user to check the credit duration for.
-
-        Returns:
-            float: The credit duration of the user (years).
-        """
-        supabase = init_db()
-        duration = (
-            supabase.table("credit_scores")
-            .select("duration")
-            .eq("card_number", credit_approval_request.credit_card_number)
-            .execute()
-        )
-        try:
-            return duration.data[0]["duration"]
-        except IndexError:
-            return random.randint(0, 11)
-
-    @staticmethod
-    def _check_if_credit_score_and_credit_duration_within_approval_limits(user_id):
-        """
-        Compare the credit score and duration of the user to the credit approval criteria.
+        Checks if the credit score and credit duration are within the approval limits.
 
         Parameters:
             user_id (int): The user ID to check the credit score and duration.
@@ -111,14 +43,12 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is approved, False otherwise.
         """
-        credit_score = (
-            CreditApprovalChecker._check_credit_score_for_credit_approval_request(
-                user_id
-            )
+        credit_score = DataBaseService().check_credit_score_for_credit_approval_request(
+            credit_approval_request
         )
         credit_duration = (
-            CreditApprovalChecker._check_credit_duration_for_credit_approval_request(
-                user_id
+            DataBaseService().check_credit_duration_for_credit_approval_request(
+                credit_approval_request
             )
         )
 
@@ -144,7 +74,9 @@ class CreditApprovalChecker:
     @staticmethod
     def check_credit_approval_request_result(credit_approval_request) -> bool:
         """
-        Check if the user is approved based on the credit approval criteria.
+        Check if the user is approved based on the credit approval criteria. The user is approved if
+        they are an existing customer, or if they are of legal age and their credit score and credit
+        duration are within the approval limits.
 
         Parameters:
             user (CreditApprovalRequest): The user to check the credit approval.
@@ -155,7 +87,7 @@ class CreditApprovalChecker:
         if credit_approval_request.is_existing_customer:
             return True
 
-        if CreditApprovalChecker._check_if_creditee_is_at_least_18_years_old_from_credit_approval_request(
+        if CreditApprovalChecker._check_if_creditee_is_of_legal_age_from_credit_approval_request(
             credit_approval_request
         ) and CreditApprovalChecker._check_if_credit_score_and_credit_duration_within_approval_limits(
             credit_approval_request

@@ -32,11 +32,13 @@ class CreditApprovalRequest(BaseModel):
         cvv (str): The CVV of the credit card of the user for whom the credit approval is requested.
         credit_card_issuer (str): The issuer of the credit card of the user for whom the credit
         approval is requested.
+        errors (str): The errors that occurred during the credit approval request.
 
     Methods:
-        parse_dates(): Parses the date of birth and expiration date
-        format_credit_approval_request() -> CreditApprovalRequest: Creates a credit approval request
-        and parses the dates.
+        _convert_dob_and_expiration_to_datetime(): Parses the date of birth and expiration date in
+        the credit approval request from strings to datetime.date objects.
+        format_credit_approval_request(): Creates a credit approval request and parses the dates by
+        calling the parse_dates method.
     """
 
     first_name: str
@@ -49,7 +51,7 @@ class CreditApprovalRequest(BaseModel):
     credit_card_issuer: str
     errors: str = ""
 
-    def convert_dob_and_expiration_to_datetime(self):
+    def _convert_dob_and_expiration_from_string_to_datetime(self):
         """
         Parses the date of birth and expiration date in the credit approval request from strings to
         datetime.date objects.
@@ -62,10 +64,10 @@ class CreditApprovalRequest(BaseModel):
 
     def format_credit_approval_request(self) -> "CreditApprovalRequest":
         """
-        Creates a credit approval request and parses the dates by calling the parse_dates method.
+        Takes a credit approval request and parses the dates by calling the parse_dates method.
 
         Returns:
             CreditApprovalRequest: A CreditApprovalRequest object.
         """
-        self.convert_dob_and_expiration_to_datetime()
+        self._convert_dob_and_expiration_from_string_to_datetime()
         return self
