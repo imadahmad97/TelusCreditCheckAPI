@@ -47,6 +47,7 @@ class CreditApprovalRequest(BaseModel):
     expiration_date: str | datetime.date
     cvv: str
     credit_card_issuer: str
+    errors: str = ""
 
     def convert_dob_and_expiration_to_datetime(self):
         """

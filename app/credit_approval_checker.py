@@ -13,6 +13,7 @@ Dependencies:
 
 import os
 import datetime
+import random
 from . import init_db
 
 
@@ -69,7 +70,10 @@ class CreditApprovalChecker:
             .eq("card_number", credit_approval_request.credit_card_number)
             .execute()
         )
-        return score.data[0]["score"]
+        try:
+            return score.data[0]["score"]
+        except IndexError:
+            return random.randint(300, 851)
 
     @staticmethod
     def _check_credit_duration_for_credit_approval_request(
@@ -91,7 +95,10 @@ class CreditApprovalChecker:
             .eq("card_number", credit_approval_request.credit_card_number)
             .execute()
         )
-        return duration.data[0]["duration"]
+        try:
+            return duration.data[0]["duration"]
+        except IndexError:
+            return random.randint(0, 11)
 
     @staticmethod
     def _check_if_credit_score_and_credit_duration_within_approval_limits(user_id):

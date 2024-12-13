@@ -1,5 +1,6 @@
 from .credit_approval_request import CreditApprovalRequest
 from fastapi import HTTPException
+from .database_transaction_recorder import DatabaseTransactionRecorder
 
 
 class LuhnAlgorithmImplementation:
@@ -60,4 +61,5 @@ class LuhnAlgorithmImplementation:
             doubled_even_digits
         )
         if (sum(odd_digits) + sum(reduced_even_digits)) % 10 != 0:
-            raise HTTPException(status_code=400, detail="Credit card number is invalid")
+            credit_approval_request.errors += "400: Invalid credit card number\n"
+            return False

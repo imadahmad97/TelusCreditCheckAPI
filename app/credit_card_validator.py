@@ -14,6 +14,7 @@ Dependencies:
 import datetime
 from fastapi import HTTPException
 from .credit_approval_request import CreditApprovalRequest
+from .database_transaction_recorder import DatabaseTransactionRecorder
 
 
 class CreditCardValidator:
@@ -46,11 +47,11 @@ class CreditCardValidator:
             HTTPException: If the credit card number is not 16 digits or the CVV is not 3-4 digits.
         """
         if not 8 <= len(credit_approval_request.credit_card_number) <= 19:
-            raise HTTPException(
-                status_code=400, detail="Card number must be between 8 and 19 digits"
+            credit_approval_request.errors += (
+                "400: Card number must be between 8 and 19 digits\n"
             )
         if not 3 <= len(credit_approval_request.cvv) <= 4:
-            raise HTTPException(status_code=400, detail="CVV must be 3 or 4 digits")
+            credit_approval_request.errors += "400: CVV must be 3 or 4 digits\n"
 
     @staticmethod
     def _validate_card_expiration_date_from_credit_approval_request(
@@ -67,7 +68,7 @@ class CreditCardValidator:
             HTTPException: If the credit card is expired.
         """
         if credit_approval_request.expiration_date < datetime.date.today():
-            raise HTTPException(status_code=400, detail="Card is expired")
+            credit_approval_request.errors += "400: Card is expired\n"
 
     @staticmethod
     def _validate_credit_card_issuer_from_credit_approval_request(
@@ -88,7 +89,7 @@ class CreditCardValidator:
             "mastercard",
             "american express",
         ]:
-            raise HTTPException(status_code=400, detail="Invalid credit card issuer")
+            credit_approval_request.errors += "400: Invalid credit card issuer\n"
 
     @staticmethod
     def validate_credit_card_from_credit_approval_request(

@@ -2,23 +2,25 @@
 This module contains a test suite for the /check_credit route in the main.py module. 
 
 The test suite includes the following test cases:
-    - test_credit_check_for_route_valid_user
-    - test_credit_check_route_missing_fields
-    - test_credit_check_route_invalid_card_number
-    - test_existing_customer_always_approved
-    - test_score_800_always_approved
-    - test_under_18_denied_when_not_existing_customer
-    - test_under_18_approved_when_existing_customer
-    - test_score_350_duration_10
-    - test_score_350_duration_9
-    - test_score_550_duration_7
-    - test_score_550_duration_6
-    - test_score_650_duration_5
-    - test_score_650_duration_4
-    - test_score_725_duration_3
-    - test_score_725_duration_2
-    - test_score_775_duration_1
-    - test_score_775_duration_0
+    - Test credit check for a valid user
+    - Test credit check route with missing fields
+    - Test credit check route with an invalid card number length
+    - Test credit check route with an invalid CVV length
+    - Test credit check route with an invalid card number
+    - Test credit check for an existing customer
+    - Test credit check for a user with a credit score of 800
+    - Test credit check for a user under 18 years old who is not an existing customer
+    - Test credit check for a user under 18 years old who is an existing customer
+    - Test credit check for a user with a credit score of 350 and a credit history duration of 10 years
+    - Test credit check for a user with a credit score of 350 and a credit history duration of 9 years
+    - Test credit check for a user with a credit score of 550 and a credit history duration of 7 years
+    - Test credit check for a user with a credit score of 550 and a credit history duration of 6 years
+    - Test credit check for a user with a credit score of 650 and a credit history duration of 5 years
+    - Test credit check for a user with a credit score of 650 and a credit history duration of 4 years
+    - Test credit check for a user with a credit score of 725 and a credit history duration of 3 years
+    - Test credit check for a user with a credit score of 725 and a credit history duration of 2 years
+    - Test credit check for a user with a credit score of 775 and a credit history duration of 1 year
+    - Test credit check for a user with a credit score of 775 and no credit history
 
 The test suite can be run by executing the following command:
     - python test_route.py
@@ -89,7 +91,7 @@ def test_credit_check_route_invalid_card_number_length():
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "Card number must be between 8 and 19 digits",
+        "detail": "400: Card number must be between 8 and 19 digits\n",
     }
 
 
@@ -99,7 +101,7 @@ def test_credit_check_route_invalid_cvv_length():
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "CVV must be 3 or 4 digits",
+        "detail": "400: CVV must be 3 or 4 digits\n",
     }
 
 
@@ -109,7 +111,7 @@ def test_credit_check_route_invalid_card_number():
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "Credit card number is invalid",
+        "detail": "400: Invalid credit card number\n",
     }
 
 
