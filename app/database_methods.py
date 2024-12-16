@@ -5,6 +5,23 @@ from .credit_approval_request import CreditApprovalRequest
 
 
 class DataBaseService:
+    """
+    This class is responsible for interacting with the Supabase database. It contains methods for
+    checking the credit score and duration of a user, as well as recording the transaction of a
+    credit approval request.
+
+    Attributes:
+        db (SupabaseClient): The Supabase client used to interact with the database
+
+    Methods:
+        check_credit_score_for_credit_approval_request: Check the credit score of the user by
+        querying the Supabase database.
+        check_credit_duration_for_credit_approval_request: Check the credit duration that the user
+        has had credit by querying the Supabase database.
+        record_credit_approval_request_transaction: Record the transaction of the credit approval
+        request in the Supabase database.
+    """
+
     def __init__(self):
         self.db = init_db()
 
@@ -66,7 +83,15 @@ class DataBaseService:
         credit_approval_request: CreditApprovalRequest,
         errors: str = None,
         approved: bool = False,
-    ):
+    ) -> None:
+        """
+        Record the transaction of the credit approval request in the Supabase database.
+
+        Parameters:
+            credit_approval_request (CreditApprovalRequest): The credit approval request to record.
+            errors (str): The errors that occurred during the credit approval request.
+            approved (bool): Whether the credit was approved or denied.
+        """
         (
             self.db.table("transactions")
             .insert(

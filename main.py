@@ -1,5 +1,5 @@
 """
-This module contains the route for the Telus Credit Check API. It handles GET requests for 
+This module contains the route for the Telus Credit Check API. It handles POST requests for 
 the /check_credit endpoint and uses the handle_credit_check_request function to process the credit 
 check request.
 

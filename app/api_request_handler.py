@@ -27,15 +27,25 @@ from .luhn_algorithm_valdiator import LuhnAlgorithmImplementation
 
 class CreditCheckRequestHandler:
     """
-    A class to handle the credit check process for a credit approval request to the API. This class
-    validates the credit card, credit score, and credit duration of the user in the credit approval
-    request, and returns the result of the credit check process.
+    The CreditCheckRequestHandler class is responsible for handling the credit check process for a
+    credit approval request to the API. This class validates the credit card, credit score, and
+    credit duration of the user in the credit approval request, and returns the result of the credit
+    check process.
 
     Methods:
-        _run_credit_check_process(credit_approval_request): Run the credit check process for the
-            credit approval request.
-        return_credit_check_result(credit_approval_request): Return the result of the credit check
+        _process_credit_approval_request(credit_approval_request): Run the credit check process for
+            the credit approval request.
+        _return_credit_check_result(credit_approval_request): Return the result of the credit check
             process for the credit approval request.
+        process_and_return_credit_check_result(credit_approval_request): Process the credit
+            approval request and return the result of the credit
+
+    Dependencies:
+        - CreditApprovalRequest: The class representing a credit approval request.
+        - CreditCardValidator: The class to validate a credit card.
+        - DataBaseService: The class to interact with the database.
+        - CreditApprovalChecker: The class to check the result of a credit approval request.
+        - LuhnAlgorithmImplementation: The class to perform the Luhn check on a credit card number.
     """
 
     @staticmethod

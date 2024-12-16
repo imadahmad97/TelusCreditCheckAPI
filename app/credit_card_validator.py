@@ -18,24 +18,18 @@ from .credit_approval_request import CreditApprovalRequest
 
 class CreditCardValidator:
     """
-    A class to validate credit card information. This class validates the credit card number length,
-    expiration date, credit card issuer, and performs the Luhn algorithm check.
+    The CreditCardValidator class is responsible for validating credit card information. This class
+    validates the credit card number length, expiration date, credit card issuer, and performs the
+    Luhn algorithm check.
 
     Methods:
-        _validate_card_number_lengths_from_credit_approval_request(credit_approval_request):
-            Validates the length of the credit card number and CVV to be 16 and 3-4 digits
-            respectively, and appends the errors to the credit approval request if the length(s) are
-            invalid.
-        _validate_card_expiration_date_from_credit_approval_request(credit_approval_request):
-            Validates the expiration date of the credit card to be in the future, and appends the
-            errors to the credit approval request if the card is expired.
-        _validate_credit_card_issuer_from_credit_approval_request(credit_approval_request):
-            Validates the credit card issuer to be Visa, MasterCard, or American Express, and
-            appends the errors to the credit approval request if the issuer is invalid.
-        validate_credit_card_from_credit_approval_request(credit_approval_request): Validates the
-            credit card information by running all the validation methods, including validating the
-            card number length, expiration date, credit card issuer, and performing the Luhn
-            algorithm check.
+        _validate_card_number_lengths(credit_approval_request): Validates the length of the credit
+            card number and CVV to be 16 and 3-4 digits respectively.
+        _validate_card_expiration_date(credit_approval_request): Validates the expiration date of
+            the credit card to be in the future.
+        _validate_credit_card_issuer(credit_approval_request): Validates the credit card issuer to
+            be Visa, MasterCard, or American Express.
+        validate_credit_card(credit_approval_request): Validates the credit card information
     """
 
     @staticmethod

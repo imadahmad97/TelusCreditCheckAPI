@@ -35,10 +35,8 @@ class CreditApprovalRequest(BaseModel):
         errors (str): The errors that occurred during the credit approval request.
 
     Methods:
-        _convert_dob_and_expiration_to_datetime(): Parses the date of birth and expiration date in
-        the credit approval request from strings to datetime.date objects.
-        format_credit_approval_request(): Creates a credit approval request and parses the dates by
-        calling the parse_dates method.
+        convert_dob_and_expiration_from_string_to_datetime: Parses the date of birth and expiration
+        date in the credit approval request from strings to datetime.date objects.
     """
 
     first_name: str

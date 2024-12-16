@@ -1,5 +1,17 @@
 """
+This module contains the CreditApprovalChecker class which is responsible for checking if a user is
+approved based on the credit approval criteria. The user is approved if they are an existing
+customer, or if they are of legal age and their credit score and credit duration are within the
+approval limits.
 
+Classes:
+    CreditApprovalChecker
+
+Dependencies:
+    - os: The OS module provides a way of using operating system dependent functionality.
+    - datetime: The datetime module supplies classes for manipulating dates and times.
+    - DataBaseService: The class to interact with the database.
+    - CreditApprovalRequest: The class representing a credit approval request.
 """
 
 import os
@@ -8,7 +20,19 @@ from .database_methods import DataBaseService
 
 
 class CreditApprovalChecker:
-    """ """
+    """
+    The CreditApprovalChecker class is responsible for checking if a user is approved based on the
+    credit approval criteria. The user is approved if they are an existing customer, or if they are
+    of legal age and their credit score and credit duration are within the approval limits.
+
+    Methods:
+        _check_if_creditee_is_of_legal_age_from_credit_approval_request(credit_approval_request):
+            Check if the user is of legal age from the credit approval request.
+        _check_if_credit_score_and_credit_duration_within_approval_limits(credit_approval_request):
+            Checks if the credit score and credit duration are within the approval limits.
+        check_credit_approval_request_result(credit_approval_request): Check if the user is approved
+            based on the credit approval criteria.
+    """
 
     @staticmethod
     def _check_if_creditee_is_of_legal_age_from_credit_approval_request(
