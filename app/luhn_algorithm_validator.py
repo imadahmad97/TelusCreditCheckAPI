@@ -64,7 +64,7 @@ class LuhnAlgorithmImplementation:
         Double the even digits of the credit card number.
 
         Parameters:
-            odd_digits (list): The list of odd digits of the credit card number.
+            even_digits (list): The list of odd digits of the credit card number.
 
         Returns:
             list: The list of doubled even digits of the credit card number."""

@@ -42,7 +42,8 @@ class CreditApprovalChecker:
         Check if the user is of legal age from the credit approval request.
 
         Parameters:
-            credit_approval_request(CreditApprovalRequest): The user to check the age.
+            credit_approval_request(CreditApprovalRequest): The credit approval request to check the
+            age for.
 
         Returns:
             bool: True if the user is over 18, False otherwise.

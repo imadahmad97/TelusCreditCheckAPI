@@ -80,7 +80,7 @@ class DataBaseService:
             user (CreditApprovalRequest): The user to check the credit duration for.
 
         Returns:
-            float: The credit duration of the user (years).
+            int: The credit duration of the user (years).
         """
         duration = (
             self.db.table("credit_scores")
