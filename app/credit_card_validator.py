@@ -55,15 +55,14 @@ class CreditCardValidator:
             <= len(credit_approval_request.credit_card_number)
             <= int(os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH"))
         ):
-            credit_approval_request.errors += (
-                "400: Card number must be between 8 and 19 digits; "
-            )
+            credit_approval_request.errors += f"400: Card number must be between {os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH")} and {os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH")} digits; "
+            print(credit_approval_request.errors)
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH"))
             <= len(credit_approval_request.cvv)
             <= int(os.getenv("MAXIMUM_CREDIT_CARD_CVV_LENGTH"))
         ):
-            credit_approval_request.errors += "400: CVV must be 3 or 4 digits; "
+            credit_approval_request.errors += f"400: CVV must be {os.getenv('MINIMUM_CREDIT_CARD_CVV_LENGTH')} or {os.getenv('MAXIMUM_CREDIT_CARD_CVV_LENGTH')} digits; "
 
     @staticmethod
     def _validate_card_expiration_date(

@@ -16,6 +16,7 @@ Dependencies:
     - CreditApprovalChecker: The class to check the result of a credit approval request.
 """
 
+import os
 from fastapi import HTTPException
 from .credit_approval_request import CreditApprovalRequest
 from .credit_card_validator import CreditCardValidator
@@ -54,9 +55,10 @@ class CreditCheckRequestHandler:
 
         CreditCardValidator.validate_credit_card(credit_approval_request)
 
-        LuhnAlgorithmImplementation.perform_luhn_check_on_credit_approval_request(
-            credit_approval_request
-        )
+        if os.getenv("RUN_LUHN_CHECK") == "True":
+            LuhnAlgorithmImplementation.perform_luhn_check_on_credit_approval_request(
+                credit_approval_request
+            )
 
     @staticmethod
     def _return_credit_check_result(
