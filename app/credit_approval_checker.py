@@ -62,7 +62,8 @@ class CreditApprovalChecker:
         Checks if the credit score and credit duration are within the approval limits.
 
         Parameters:
-            user_id (int): The user ID to check the credit score and duration.
+            credit_approval_request(CreditApprovalRequest): The request to check the credit score and
+            duration for.
 
         Returns:
             bool: True if the user is approved, False otherwise.

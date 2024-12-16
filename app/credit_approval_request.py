@@ -53,6 +53,12 @@ class CreditApprovalRequest(BaseModel):
         """
         Parses the date of birth and expiration date in the credit approval request from strings to
         datetime.date objects.
+
+        Modifies:
+            - self.date_of_birth: The date of birth of the user for whom the credit approval is
+            requested.
+            - self.expiration_date: The expiration date of the credit card of the user for whom the
+            credit approval is requested.
         """
         self.date_of_birth = datetime.datetime.strptime(
             self.date_of_birth, "%Y-%m-%d"

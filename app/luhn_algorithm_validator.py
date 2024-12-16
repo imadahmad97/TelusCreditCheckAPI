@@ -59,7 +59,7 @@ class LuhnAlgorithmImplementation:
         return raw_odd_digits, raw_even_digits
 
     @staticmethod
-    def _double_even_digits(odd_digits: list) -> list:
+    def _double_even_digits(even_digits: list) -> list:
         """
         Double the even digits of the credit card number.
 
@@ -69,7 +69,7 @@ class LuhnAlgorithmImplementation:
         Returns:
             list: The list of doubled even digits of the credit card number."""
         doubled_even_digits = []
-        for digit in odd_digits:
+        for digit in even_digits:
             doubled_even_digits.append(digit * 2)
         return doubled_even_digits
 

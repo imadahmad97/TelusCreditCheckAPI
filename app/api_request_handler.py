@@ -22,7 +22,7 @@ from .credit_approval_request import CreditApprovalRequest
 from .credit_card_validator import CreditCardValidator
 from .database_methods import DataBaseService
 from .credit_approval_checker import CreditApprovalChecker
-from .luhn_algorithm_valdiator import LuhnAlgorithmImplementation
+from .luhn_algorithm_validator import LuhnAlgorithmImplementation
 
 
 class CreditCheckRequestHandler:

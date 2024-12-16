@@ -35,7 +35,7 @@ class CreditCardValidator:
     @staticmethod
     def _validate_card_number_lengths(
         credit_approval_request: CreditApprovalRequest,
-    ):
+    ) -> None:
         """
         Validates the length of the credit card number and CVV to be 16 and 3-4 digits respectively,
         and appends the errors to the credit approval request if the length(s) are invalid.
@@ -61,7 +61,7 @@ class CreditCardValidator:
     @staticmethod
     def _validate_card_expiration_date(
         credit_approval_request: CreditApprovalRequest,
-    ):
+    ) -> None:
         """
         Validates the expiration date of the credit card to be in the future, and appends the errors
         to the credit approval request if the card is expired.
@@ -76,7 +76,7 @@ class CreditCardValidator:
     @staticmethod
     def _validate_credit_card_issuer(
         credit_approval_request: CreditApprovalRequest,
-    ):
+    ) -> None:
         """
         Validates the credit card issuer to be Visa, MasterCard, or American Express, and appends
         the errors to the credit approval request if the issuer is invalid.
@@ -95,7 +95,7 @@ class CreditCardValidator:
     @staticmethod
     def validate_credit_card(
         credit_approval_request: CreditApprovalRequest,
-    ):
+    ) -> None:
         """
         Validates the credit card information by running all the validation methods, including
         validating the card number length, expiration date, credit card issuer, and performing the

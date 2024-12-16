@@ -1,3 +1,18 @@
+"""
+This module contains the DataBaseService class, which is responsible for interacting with the
+Supabase database. It contains methods for checking the credit score and duration of a user, as well
+as recording the transaction of a credit approval request.
+
+Classes:
+    DataBaseService
+
+Dependencies:
+    - random: This module implements pseudo-random number generators for various distributions.
+    - os: The OS module provides a way of using operating system dependent functionality.
+    - init_db: The function to initialize the Supabase client.
+    - CreditApprovalRequest: The class representing a credit approval request.
+"""
+
 import random
 import os
 from . import init_db
@@ -23,6 +38,9 @@ class DataBaseService:
     """
 
     def __init__(self):
+        """
+        Initialize the Supabase client to interact with the database.
+        """
         self.db = init_db()
 
     def check_credit_score_for_credit_approval_request(
