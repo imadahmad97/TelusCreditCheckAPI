@@ -37,7 +37,7 @@ class DataBaseService:
         request in the Supabase database.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the Supabase client to interact with the database.
         """

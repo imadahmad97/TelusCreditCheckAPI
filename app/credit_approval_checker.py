@@ -17,6 +17,7 @@ Dependencies:
 import os
 import datetime
 from .database_methods import DataBaseService
+from .credit_approval_request import CreditApprovalRequest
 
 
 class CreditApprovalChecker:
@@ -36,7 +37,7 @@ class CreditApprovalChecker:
 
     @staticmethod
     def _check_if_creditee_is_of_legal_age_from_credit_approval_request(
-        credit_approval_request,
+        credit_approval_request: CreditApprovalRequest,
     ) -> bool:
         """
         Check if the user is of legal age from the credit approval request.
