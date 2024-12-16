@@ -55,7 +55,7 @@ class DataBaseService:
         Returns:
             int: The credit score of the user.
         """
-        score = (
+        score: dict = (
             self.db.table("credit_scores")
             .select("score")
             .eq("card_number", credit_approval_request.credit_card_number)
@@ -82,7 +82,7 @@ class DataBaseService:
         Returns:
             int: The credit duration of the user (years).
         """
-        duration = (
+        duration: dict = (
             self.db.table("credit_scores")
             .select("duration")
             .eq("card_number", credit_approval_request.credit_card_number)

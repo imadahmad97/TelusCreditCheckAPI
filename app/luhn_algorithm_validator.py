@@ -41,8 +41,8 @@ class LuhnAlgorithmImplementation:
         Returns:
             tuple: A tuple containing the odd and even digits of the credit card number.
         """
-        raw_odd_digits = []
-        raw_even_digits = []
+        raw_odd_digits: list = []
+        raw_even_digits: list = []
         i = 1
         while i <= len(credit_approval_request.credit_card_number):
             if i % 2 != 0:
@@ -59,7 +59,7 @@ class LuhnAlgorithmImplementation:
         return raw_odd_digits, raw_even_digits
 
     @staticmethod
-    def _double_even_digits(even_digits: list) -> list:
+    def _double_digits_at_even_positions(even_digits: list) -> list:
         """
         Double the even digits of the credit card number.
 
@@ -68,13 +68,13 @@ class LuhnAlgorithmImplementation:
 
         Returns:
             list: The list of doubled even digits of the credit card number."""
-        doubled_even_digits = []
+        doubled_even_digits: list = []
         for digit in even_digits:
             doubled_even_digits.append(digit * 2)
         return doubled_even_digits
 
     @staticmethod
-    def _luhn_reduction_step(
+    def _reduce_doubled_digits(
         doubled_even_digits: list,
     ) -> list:
         """
@@ -86,17 +86,17 @@ class LuhnAlgorithmImplementation:
         Returns:
             list: The list of reduced even digits after the Luhn reduction step.
         """
-        reduced_even_digits = []
+        reduced_even_digits: list = []
         for number in doubled_even_digits:
             if len(str(number)) == 2:
-                reduced_number = int(str(number)[0]) + int(str(number)[1])
+                reduced_number: int = int(str(number)[0]) + int(str(number)[1])
                 reduced_even_digits.append(reduced_number)
             else:
                 reduced_even_digits.append(number)
         return reduced_even_digits
 
     @staticmethod
-    def perform_luhn_check_on_credit_approval_request(
+    def perform_luhn_check(
         credit_approval_request: CreditApprovalRequest,
     ) -> bool:
         """
@@ -109,15 +109,17 @@ class LuhnAlgorithmImplementation:
             bool: True if the credit card number is valid according to the Luhn algorithm, False
                 otherwise.
         """
+        odd_digits: list
+        even_digits: list
         odd_digits, even_digits = (
             LuhnAlgorithmImplementation._separate_digits_by_position(
                 credit_approval_request
             )
         )
-        doubled_even_digits = LuhnAlgorithmImplementation._double_even_digits(
-            even_digits
+        doubled_even_digits: list = (
+            LuhnAlgorithmImplementation._double_digits_at_even_positions(even_digits)
         )
-        reduced_even_digits = LuhnAlgorithmImplementation._luhn_reduction_step(
+        reduced_even_digits: list = LuhnAlgorithmImplementation._reduce_doubled_digits(
             doubled_even_digits
         )
         if (sum(odd_digits) + sum(reduced_even_digits)) % int(

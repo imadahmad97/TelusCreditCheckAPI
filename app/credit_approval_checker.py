@@ -49,7 +49,7 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is over 18, False otherwise.
         """
-        age = (
+        age: float = (
             datetime.datetime.now().date() - credit_approval_request.date_of_birth
         ).days / float(os.getenv("DAYS_IN_YEAR"))
         if age < int(os.getenv("LEGAL_AGE")):
@@ -70,16 +70,18 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is approved, False otherwise.
         """
-        credit_score = DataBaseService().check_credit_score_for_credit_approval_request(
+        credit_score: (
+            int
+        ) = DataBaseService().check_credit_score_for_credit_approval_request(
             credit_approval_request
         )
-        credit_duration = (
-            DataBaseService().check_credit_duration_for_credit_approval_request(
-                credit_approval_request
-            )
+        credit_duration: (
+            int
+        ) = DataBaseService().check_credit_duration_for_credit_approval_request(
+            credit_approval_request
         )
 
-        credit_criteria = {
+        credit_criteria: dict = {
             "poor": {
                 "range": (
                     int(os.getenv("POOR_CREDIT_MIN")),
