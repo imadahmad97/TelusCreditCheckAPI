@@ -11,7 +11,7 @@ Dependencies:
 """
 
 import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class CreditApprovalRequest(BaseModel):
@@ -49,6 +49,10 @@ class CreditApprovalRequest(BaseModel):
     credit_card_issuer: str
     errors: str = ""
 
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.convert_dob_and_expiration_from_string_to_datetime()
+
     def convert_dob_and_expiration_from_string_to_datetime(self):
         """
         Parses the date of birth and expiration date in the credit approval request from strings to
@@ -60,8 +64,12 @@ class CreditApprovalRequest(BaseModel):
             - self.expiration_date: The expiration date of the credit card of the user for whom the
             credit approval is requested.
         """
-        self.date_of_birth = datetime.datetime.strptime(
-            self.date_of_birth, "%Y-%m-%d"
-        ).date()
-        expiration_year, expiration_month = map(int, self.expiration_date.split("-"))
-        self.expiration_date = datetime.date(expiration_year, expiration_month, 1)
+        if isinstance(self.date_of_birth, str):
+            self.date_of_birth = datetime.datetime.strptime(
+                self.date_of_birth, "%Y-%m-%d"
+            ).date()
+        if isinstance(self.expiration_date, str):
+            expiration_year, expiration_month = map(
+                int, self.expiration_date.split("-")
+            )
+            self.expiration_date = datetime.date(expiration_year, expiration_month, 1)

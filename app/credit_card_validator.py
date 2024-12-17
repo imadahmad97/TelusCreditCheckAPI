@@ -14,6 +14,7 @@ Dependencies:
 import datetime
 import os
 from .credit_approval_request import CreditApprovalRequest
+from .luhn_algorithm_validator import LuhnAlgorithmImplementation
 
 
 class CreditCardValidator:
@@ -108,3 +109,4 @@ class CreditCardValidator:
         CreditCardValidator._validate_card_number_lengths(credit_approval_request)
         CreditCardValidator._validate_card_expiration_date(credit_approval_request)
         CreditCardValidator._validate_credit_card_issuer(credit_approval_request)
+        LuhnAlgorithmImplementation.perform_luhn_check(credit_approval_request)

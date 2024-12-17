@@ -100,7 +100,7 @@ class DataBaseService:
         self,
         credit_approval_request: CreditApprovalRequest,
         errors: str = None,
-        approved: bool = False,
+        approval_status: str = False,
     ) -> None:
         """
         Record the transaction of the credit approval request in the Supabase database.
@@ -110,6 +110,10 @@ class DataBaseService:
             errors (str): The errors that occurred during the credit approval request.
             approved (bool): Whether the credit was approved or denied.
         """
+        if not approval_status or errors:
+            approved = False
+        else:
+            approved = True
         (
             self.db.table("transactions")
             .insert(

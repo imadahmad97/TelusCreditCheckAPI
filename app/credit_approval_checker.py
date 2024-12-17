@@ -16,7 +16,6 @@ Dependencies:
 
 import os
 import datetime
-from .database_methods import DataBaseService
 from .credit_approval_request import CreditApprovalRequest
 
 
@@ -58,7 +57,7 @@ class CreditApprovalChecker:
 
     @staticmethod
     def _check_if_credit_score_and_credit_duration_within_approval_limits(
-        credit_approval_request,
+        credit_approval_request, credit_score: int, credit_duration: int
     ) -> bool:
         """
         Checks if the credit score and credit duration are within the approval limits.
@@ -70,16 +69,6 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is approved, False otherwise.
         """
-        credit_score: (
-            int
-        ) = DataBaseService().check_credit_score_for_credit_approval_request(
-            credit_approval_request
-        )
-        credit_duration: (
-            int
-        ) = DataBaseService().check_credit_duration_for_credit_approval_request(
-            credit_approval_request
-        )
 
         credit_criteria: dict = {
             "poor": {
@@ -137,7 +126,9 @@ class CreditApprovalChecker:
         return False
 
     @staticmethod
-    def check_credit_approval_request_result(credit_approval_request) -> bool:
+    def check_credit_approval_request_result(
+        credit_approval_request, credit_score, credit_duration
+    ) -> bool:
         """
         Check if the user is approved based on the credit approval criteria. The user is approved if
         they are an existing customer, or if they are of legal age and their credit score and credit
@@ -155,7 +146,7 @@ class CreditApprovalChecker:
         if CreditApprovalChecker._check_if_creditee_is_of_legal_age_from_credit_approval_request(
             credit_approval_request
         ) and CreditApprovalChecker._check_if_credit_score_and_credit_duration_within_approval_limits(
-            credit_approval_request
+            credit_approval_request, credit_score, credit_duration
         ):
             return True
         return False
