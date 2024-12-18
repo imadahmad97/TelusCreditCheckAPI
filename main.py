@@ -19,7 +19,7 @@ Dependencies:
 from typing import Annotated
 from fastapi import FastAPI, Form
 from app.credit_approval_request import CreditApprovalRequest
-from app.credit_check_processor_interface import credit_check_processor
+from app.credit_check_processor import credit_check_processor
 
 app = FastAPI()
 

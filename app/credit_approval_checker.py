@@ -26,16 +26,14 @@ class CreditApprovalChecker:
     of legal age and their credit score and credit duration are within the approval limits.
 
     Methods:
-        _check_if_creditee_is_of_legal_age_from_credit_approval_request(credit_approval_request):
+        check_if_creditee_is_of_legal_age_from_credit_approval_request(credit_approval_request):
             Check if the user is of legal age from the credit approval request.
-        _check_if_credit_score_and_credit_duration_within_approval_limits(credit_approval_request):
+        check_if_credit_score_and_credit_duration_within_approval_limits(credit_approval_request):
             Checks if the credit score and credit duration are within the approval limits.
-        check_credit_approval_request_result(credit_approval_request): Check if the user is approved
-            based on the credit approval criteria.
     """
 
     @staticmethod
-    def _check_if_creditee_is_of_legal_age_from_credit_approval_request(
+    def check_if_creditee_is_of_legal_age_from_credit_approval_request(
         credit_approval_request: CreditApprovalRequest,
     ) -> bool:
         """
@@ -56,15 +54,15 @@ class CreditApprovalChecker:
         return True
 
     @staticmethod
-    def _check_if_credit_score_and_credit_duration_within_approval_limits(
-        credit_approval_request, credit_score: int, credit_duration: int
+    def check_if_credit_score_and_credit_duration_within_approval_limits(
+        credit_score: int, credit_duration: int
     ) -> bool:
         """
         Checks if the credit score and credit duration are within the approval limits.
 
         Parameters:
-            credit_approval_request(CreditApprovalRequest): The request to check the credit score and
-            duration for.
+            credit_approval_request(CreditApprovalRequest): The request to check the credit score
+            and duration for.
 
         Returns:
             bool: True if the user is approved, False otherwise.

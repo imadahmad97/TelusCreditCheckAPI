@@ -19,22 +19,20 @@ from .luhn_algorithm_validator import LuhnAlgorithmImplementation
 
 class CreditCardValidator:
     """
-    The CreditCardValidator class is responsible for validating credit card information. This class
-    validates the credit card number length, expiration date, credit card issuer, and performs the
-    Luhn algorithm check.
+    A class to validate credit card information. This class validates the credit card number length,
+    expiration date, and credit card issuer.
 
     Methods:
-        _validate_card_number_lengths(credit_approval_request): Validates the length of the credit
-            card number and CVV to be 16 and 3-4 digits respectively.
-        _validate_card_expiration_date(credit_approval_request): Validates the expiration date of
-            the credit card to be in the future.
-        _validate_credit_card_issuer(credit_approval_request): Validates the credit card issuer to
-            be Visa, MasterCard, or American Express.
-        validate_credit_card(credit_approval_request): Validates the credit card information
+        validate_card_number_lengths: Validates the length of the credit card number and CVV to be
+        16 and 3-4 digits respectively.
+        validate_card_expiration_date: Validates the expiration date of the credit card to be in
+        the future.
+        validate_credit_card_issuer: Validates the credit card issuer to be Visa, MasterCard, or
+        American Express.
     """
 
     @staticmethod
-    def _validate_card_number_lengths(
+    def validate_card_number_lengths(
         credit_approval_request: CreditApprovalRequest,
     ) -> None:
         """
@@ -60,7 +58,7 @@ class CreditCardValidator:
             credit_approval_request.errors += f"400: CVV must be {os.getenv('MINIMUM_CREDIT_CARD_CVV_LENGTH')} or {os.getenv('MAXIMUM_CREDIT_CARD_CVV_LENGTH')} digits; "
 
     @staticmethod
-    def _validate_card_expiration_date(
+    def validate_card_expiration_date(
         credit_approval_request: CreditApprovalRequest,
     ) -> None:
         """
@@ -75,7 +73,7 @@ class CreditCardValidator:
             credit_approval_request.errors += "400: Card is expired; "
 
     @staticmethod
-    def _validate_credit_card_issuer(
+    def validate_credit_card_issuer(
         credit_approval_request: CreditApprovalRequest,
     ) -> None:
         """

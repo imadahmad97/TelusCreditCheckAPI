@@ -11,7 +11,7 @@ Dependencies:
 """
 
 import datetime
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 
 class CreditApprovalRequest(BaseModel):
@@ -35,7 +35,7 @@ class CreditApprovalRequest(BaseModel):
         errors (str): The errors that occurred during the credit approval request.
 
     Methods:
-        convert_dob_and_expiration_from_string_to_datetime: Parses the date of birth and expiration
+        _convert_dob_and_expiration_from_string_to_datetime: Parses the date of birth and expiration
         date in the credit approval request from strings to datetime.date objects.
     """
 
@@ -51,9 +51,9 @@ class CreditApprovalRequest(BaseModel):
 
     def __init__(self, **data):
         super().__init__(**data)
-        self.convert_dob_and_expiration_from_string_to_datetime()
+        self._convert_dob_and_expiration_from_string_to_datetime()
 
-    def convert_dob_and_expiration_from_string_to_datetime(self):
+    def _convert_dob_and_expiration_from_string_to_datetime(self):
         """
         Parses the date of birth and expiration date in the credit approval request from strings to
         datetime.date objects.

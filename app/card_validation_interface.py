@@ -16,13 +16,13 @@ def validate_credit_card(credit_approval_request: CreditApprovalRequest) -> None
     luhn_validator = LuhnAlgorithmImplementation()
 
     # Step 1: Validate all card number lengths
-    credit_card_validator._validate_card_number_lengths(credit_approval_request)
+    credit_card_validator.validate_card_number_lengths(credit_approval_request)
 
     # Step 2: Validate the card expiration date
-    credit_card_validator._validate_card_expiration_date(credit_approval_request)
+    credit_card_validator.validate_card_expiration_date(credit_approval_request)
 
     # Step 3: Validate the credit card issuer
-    credit_card_validator._validate_credit_card_issuer(credit_approval_request)
+    credit_card_validator.validate_credit_card_issuer(credit_approval_request)
 
     # Step 4: Perform the Luhn check
     luhn_validator.perform_luhn_check(credit_approval_request)
