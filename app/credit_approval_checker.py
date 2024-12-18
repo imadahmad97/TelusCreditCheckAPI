@@ -124,29 +124,3 @@ class CreditApprovalChecker:
                 return True
 
         return False
-
-    @staticmethod
-    def check_credit_approval_request_result(
-        credit_approval_request, credit_score, credit_duration
-    ) -> bool:
-        """
-        Check if the user is approved based on the credit approval criteria. The user is approved if
-        they are an existing customer, or if they are of legal age and their credit score and credit
-        duration are within the approval limits.
-
-        Parameters:
-            user (CreditApprovalRequest): The user to check the credit approval.
-
-        Returns:
-            bool: True if the user is approved, False otherwise.
-        """
-        if credit_approval_request.is_existing_customer:
-            return True
-
-        if CreditApprovalChecker._check_if_creditee_is_of_legal_age_from_credit_approval_request(
-            credit_approval_request
-        ) and CreditApprovalChecker._check_if_credit_score_and_credit_duration_within_approval_limits(
-            credit_approval_request, credit_score, credit_duration
-        ):
-            return True
-        return False

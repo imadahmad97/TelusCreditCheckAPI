@@ -92,21 +92,3 @@ class CreditCardValidator:
             "american express",
         ]:
             credit_approval_request.errors += "400: Invalid credit card issuer; "
-
-    @staticmethod
-    def validate_credit_card(
-        credit_approval_request: CreditApprovalRequest,
-    ) -> None:
-        """
-        Validates the credit card information by running all the validation methods, including
-        validating the card number length, expiration date, credit card issuer, and performing the
-        Luhn algorithm check.
-
-        Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to
-            validate.
-        """
-        CreditCardValidator._validate_card_number_lengths(credit_approval_request)
-        CreditCardValidator._validate_card_expiration_date(credit_approval_request)
-        CreditCardValidator._validate_credit_card_issuer(credit_approval_request)
-        LuhnAlgorithmImplementation.perform_luhn_check(credit_approval_request)

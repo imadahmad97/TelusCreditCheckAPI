@@ -37,67 +37,48 @@ class DataBaseService:
         request in the Supabase database.
     """
 
-    def __init__(self) -> None:
+    @staticmethod
+    def fetch_credit_score_and_duration_from_db(
+        credit_approval_request: CreditApprovalRequest,
+    ) -> dict:
         """
-        Initialize the Supabase client to interact with the database.
-        """
-        self.db = init_db()
-
-    def check_credit_score_for_credit_approval_request(
-        self, credit_approval_request: CreditApprovalRequest
-    ) -> int:
-        """
-        Check the credit score of the user by querying the Supabase database.
+        Fetch the credit score and credit duration of the user by querying the Supabase database.
 
         Parameters:
-            user (CreditApprovalRequest): The user to check the credit score for.
+            credit_approval_request (CreditApprovalRequest): The user to fetch the data for.
 
         Returns:
-            int: The credit score of the user.
+            dict: A dictionary containing the credit score and credit duration of the user.
         """
-        score: dict = (
-            self.db.table("credit_scores")
-            .select("score")
+        db = init_db()
+        data: dict = (
+            db.table("credit_scores")
+            .select("score, duration")
             .eq("card_number", credit_approval_request.credit_card_number)
             .execute()
         )
+        result = {}
+
         try:
-            return score.data[0]["score"]
+            credit_score = result["score"] = data.data[0]["score"]
         except IndexError:
-            return random.randint(
+            credit_score = result["score"] = random.randint(
                 int(os.getenv("RANDOM_CREDIT_SCORE_MIN")),
                 int(os.getenv("RANDOM_CREDIT_SCORE_MAX")),
             )
 
-    def check_credit_duration_for_credit_approval_request(
-        self,
-        credit_approval_request: CreditApprovalRequest,
-    ) -> int:
-        """
-        Check the credit duration that the user has had credit by querying the Supabase database.
-
-        Parameters:
-            user (CreditApprovalRequest): The user to check the credit duration for.
-
-        Returns:
-            int: The credit duration of the user (years).
-        """
-        duration: dict = (
-            self.db.table("credit_scores")
-            .select("duration")
-            .eq("card_number", credit_approval_request.credit_card_number)
-            .execute()
-        )
         try:
-            return duration.data[0]["duration"]
+            credit_duration = result["duration"] = data.data[0]["duration"]
         except IndexError:
-            return random.randint(
+            credit_duration = result["duration"] = random.randint(
                 int(os.getenv("RANDOM_CREDIT_DURATION_MIN")),
                 int(os.getenv("RANDOM_CREDIT_DURATION_MAX")),
             )
 
+        return credit_score, credit_duration
+
+    @staticmethod
     def record_credit_approval_request_transaction(
-        self,
         credit_approval_request: CreditApprovalRequest,
         errors: str = None,
         approval_status: str = False,
@@ -110,12 +91,13 @@ class DataBaseService:
             errors (str): The errors that occurred during the credit approval request.
             approved (bool): Whether the credit was approved or denied.
         """
+        db = init_db()
         if not approval_status or errors:
             approved = False
         else:
             approved = True
         (
-            self.db.table("transactions")
+            db.table("transactions")
             .insert(
                 {
                     "card_number": credit_approval_request.credit_card_number,
