@@ -18,8 +18,8 @@ Dependencies:
 
 from typing import Annotated
 from fastapi import FastAPI, Form
-from app.credit_approval_request import CreditApprovalRequest
-from app.credit_check_processor import credit_check_processor
+from app.models.credit_approval_request import CreditApprovalRequest
+from app.credit_check_processor import process_credit_check
 
 app = FastAPI()
 
@@ -37,4 +37,4 @@ def credit_check_route(
     Returns:
         dict: The result of the credit check.
     """
-    return credit_check_processor(credit_approval_request)
+    return process_credit_check(credit_approval_request)

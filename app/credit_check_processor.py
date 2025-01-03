@@ -14,13 +14,15 @@ Dependencies:
 """
 
 from fastapi import HTTPException
-from app.database_service import DataBaseService
-from app.credit_approval_request import CreditApprovalRequest
-from app.card_validation_interface import validate_credit_card
-from app.credit_approval_checker_interface import check_credit_approval_request_result
+from app.utils.database_service import DataBaseService
+from .models.credit_approval_request import CreditApprovalRequest
+from .card_validation_interface import validate_credit_card
+from .credit_approval_checker_interface import (
+    check_credit_approval_request_result,
+)
 
 
-def credit_check_processor(credit_approval_request: CreditApprovalRequest) -> dict:
+def process_credit_check(credit_approval_request: CreditApprovalRequest) -> dict:
     """
     This function serves as the interface for the credit check processor. It validates the incoming
     credit approval request, fetches the credit score and duration from the database, runs the
@@ -31,12 +33,15 @@ def credit_check_processor(credit_approval_request: CreditApprovalRequest) -> di
         credit_approval_request (CreditApprovalRequest): An instance of the CreditApprovalRequest
         class representing the credit approval request.
     """
+    # Prep: Initialize dependencies
+    db_service = DataBaseService()
+
     # Step 1: Validate the incoming request
     validate_credit_card(credit_approval_request)
 
     # Step 2: Fetch the credit score and duration from the database
-    credit_score, credit_duration = (
-        DataBaseService.fetch_credit_score_and_duration_from_db(credit_approval_request)
+    credit_score, credit_duration = db_service.fetch_credit_score_and_duration_from_db(
+        credit_approval_request
     )
 
     # Step 3: Run the credit check process
@@ -45,7 +50,7 @@ def credit_check_processor(credit_approval_request: CreditApprovalRequest) -> di
     )
 
     # Step 4: Save the credit approval request to the database
-    DataBaseService.record_credit_approval_request_transaction(
+    db_service.record_credit_approval_request_transaction(
         credit_approval_request, approval_status=response
     )
 

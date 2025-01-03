@@ -13,8 +13,7 @@ Dependencies:
 
 import datetime
 import os
-from .credit_approval_request import CreditApprovalRequest
-from .luhn_algorithm_validator import LuhnAlgorithmImplementation
+from app.models.credit_approval_request import CreditApprovalRequest
 
 
 class CreditCardValidator:
@@ -32,30 +31,43 @@ class CreditCardValidator:
     """
 
     @staticmethod
-    def validate_card_number_lengths(
+    def validate_card_number_length(
         credit_approval_request: CreditApprovalRequest,
     ) -> None:
         """
-        Validates the length of the credit card number and CVV to be 16 and 3-4 digits respectively,
-        and appends the errors to the credit approval request if the length(s) are invalid.
+        Validates the length of the credit card number to be between 16 and 19 digits, and appends
+        the errors to the credit approval request if the length is invalid.
 
         Parameters:
             credit_approval_request (CreditApprovalRequest): The credit approval request to
             validate.
+
         """
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH"))
             <= len(credit_approval_request.credit_card_number)
             <= int(os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH"))
         ):
-            credit_approval_request.errors += f"400: Card number must be between {os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH")} and {os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH")} digits; "
-            print(credit_approval_request.errors)
+            credit_approval_request.errors += f"Card number must be between {os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH")} and {os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH")} digits; "
+
+    @staticmethod
+    def validate_cvv_number_length(
+        credit_approval_request: CreditApprovalRequest,
+    ) -> None:
+        """
+        Validates the length of the CVV to be between 3 and 4 digits, and appends the errors to the
+        credit approval request if the length is invalid.
+
+        Parameters:
+            credit_approval_request (CreditApprovalRequest): The credit approval request to
+            validate.
+        """
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH"))
             <= len(credit_approval_request.cvv)
             <= int(os.getenv("MAXIMUM_CREDIT_CARD_CVV_LENGTH"))
         ):
-            credit_approval_request.errors += f"400: CVV must be {os.getenv('MINIMUM_CREDIT_CARD_CVV_LENGTH')} or {os.getenv('MAXIMUM_CREDIT_CARD_CVV_LENGTH')} digits; "
+            credit_approval_request.errors += f"CVV must be {os.getenv('MINIMUM_CREDIT_CARD_CVV_LENGTH')} or {os.getenv('MAXIMUM_CREDIT_CARD_CVV_LENGTH')} digits; "
 
     @staticmethod
     def validate_card_expiration_date(
@@ -70,7 +82,7 @@ class CreditCardValidator:
             validate.
         """
         if credit_approval_request.expiration_date < datetime.date.today():
-            credit_approval_request.errors += "400: Card is expired; "
+            credit_approval_request.errors += "Card is expired; "
 
     @staticmethod
     def validate_credit_card_issuer(
@@ -89,4 +101,4 @@ class CreditCardValidator:
             "mastercard",
             "american express",
         ]:
-            credit_approval_request.errors += "400: Invalid credit card issuer; "
+            credit_approval_request.errors += "Invalid credit card issuer; "

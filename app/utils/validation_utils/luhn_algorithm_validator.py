@@ -10,7 +10,7 @@ Dependencies:
 """
 
 import os
-from .credit_approval_request import CreditApprovalRequest
+from app.models.credit_approval_request import CreditApprovalRequest
 
 
 class LuhnAlgorithmImplementation:
@@ -125,5 +125,5 @@ class LuhnAlgorithmImplementation:
         if (sum(odd_digits) + sum(reduced_even_digits)) % int(
             os.getenv("LUHN_MODULUS")
         ) != 0:
-            credit_approval_request.errors += "400: Invalid credit card number; "
+            credit_approval_request.errors += "Invalid credit card number; "
             return False

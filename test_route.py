@@ -91,7 +91,7 @@ def test_credit_check_route_invalid_card_number_length():
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "400: Card number must be between 8 and 19 digits; 400: Invalid credit card number; ",
+        "detail": "Card number must be between 8 and 19 digits; Invalid credit card number; ",
     }
 
 
@@ -101,7 +101,7 @@ def test_credit_check_route_invalid_cvv_length():
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "400: CVV must be 3 or 4 digits; ",
+        "detail": "CVV must be 3 or 4 digits; ",
     }
 
 
@@ -111,7 +111,7 @@ def test_credit_check_route_invalid_card_number():
     response = client.post("/check_credit", data=data)
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "400: Invalid credit card number; ",
+        "detail": "Invalid credit card number; ",
     }
 
 

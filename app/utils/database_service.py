@@ -15,8 +15,8 @@ Dependencies:
 
 import random
 import os
-from . import init_db
-from .credit_approval_request import CreditApprovalRequest
+from ..models.credit_approval_request import CreditApprovalRequest
+from supabase import create_client, Client
 
 
 class DataBaseService:
@@ -37,8 +37,19 @@ class DataBaseService:
         request in the Supabase database.
     """
 
-    @staticmethod
+    def __init__(self):
+        """
+        Initialize the Supabase client's PostgreSQL database for the application.
+
+        Returns:
+            Client: The Supabase client
+        """
+        url: str = os.getenv("SUPABASE_URL")
+        key: str = os.getenv("SUPABASE_KEY")
+        self.supabase: Client = create_client(url, key)
+
     def fetch_credit_score_and_duration_from_db(
+        self,
         credit_approval_request: CreditApprovalRequest,
     ) -> dict:
         """
@@ -50,7 +61,7 @@ class DataBaseService:
         Returns:
             dict: A dictionary containing the credit score and credit duration of the user.
         """
-        db = init_db()
+        db = self.supabase
         data: dict = (
             db.table("credit_scores")
             .select("score, duration")
@@ -77,8 +88,8 @@ class DataBaseService:
 
         return credit_score, credit_duration
 
-    @staticmethod
     def record_credit_approval_request_transaction(
+        self,
         credit_approval_request: CreditApprovalRequest,
         errors: str = None,
         approval_status: str = False,
@@ -91,7 +102,7 @@ class DataBaseService:
             errors (str): The errors that occurred during the credit approval request.
             approved (bool): Whether the credit was approved or denied.
         """
-        db = init_db()
+        db = self.supabase
         if not approval_status or errors:
             approved = False
         else:

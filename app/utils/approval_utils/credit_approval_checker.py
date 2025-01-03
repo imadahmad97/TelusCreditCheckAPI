@@ -16,7 +16,7 @@ Dependencies:
 
 import os
 import datetime
-from .credit_approval_request import CreditApprovalRequest
+from app.models.credit_approval_request import CreditApprovalRequest
 
 
 class CreditApprovalChecker:

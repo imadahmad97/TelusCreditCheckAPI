@@ -9,8 +9,8 @@ Dependencies:
     - CreditApprovalRequest: The class representing a credit approval request.
 """
 
-from .credit_approval_checker import CreditApprovalChecker
-from .credit_approval_request import CreditApprovalRequest
+from app.utils.approval_utils.credit_approval_checker import CreditApprovalChecker
+from app.models.credit_approval_request import CreditApprovalRequest
 
 
 def check_credit_approval_request_result(
