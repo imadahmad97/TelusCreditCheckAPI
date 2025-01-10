@@ -16,6 +16,7 @@ Dependencies:
 import random
 import os
 from ..models.credit_approval_request import CreditApprovalRequest
+from ..models.credit_approval_response import CreditApprovalResponse
 from supabase import create_client, Client
 
 
@@ -90,9 +91,7 @@ class DataBaseService:
 
     def record_credit_approval_request_transaction(
         self,
-        credit_approval_request: CreditApprovalRequest,
-        errors: str = None,
-        approval_status: str = False,
+        credit_approval_response: CreditApprovalResponse,
     ) -> None:
         """
         Record the transaction of the credit approval request in the Supabase database.
@@ -103,17 +102,13 @@ class DataBaseService:
             approved (bool): Whether the credit was approved or denied.
         """
         db = self.supabase
-        if not approval_status or errors:
-            approved = False
-        else:
-            approved = True
         (
             db.table("transactions")
             .insert(
                 {
-                    "card_number": credit_approval_request.credit_card_number,
-                    "approved?": approved,
-                    "errors": errors,
+                    "card_number": credit_approval_response.credit_card_number,
+                    "approved?": credit_approval_response.is_approved,
+                    "errors": credit_approval_response.errors,
                 }
             )
             .execute()

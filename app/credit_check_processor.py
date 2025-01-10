@@ -37,7 +37,7 @@ def process_credit_check(credit_approval_request: CreditApprovalRequest) -> dict
     db_service = DataBaseService()
 
     # Step 1: Validate the incoming request
-    validate_credit_card(credit_approval_request)
+    validated_response = validate_credit_card(credit_approval_request)
 
     # Step 2: Fetch the credit score and duration from the database
     credit_score, credit_duration = db_service.fetch_credit_score_and_duration_from_db(
@@ -45,18 +45,17 @@ def process_credit_check(credit_approval_request: CreditApprovalRequest) -> dict
     )
 
     # Step 3: Run the credit check process
-    response = check_credit_approval_request_result(
-        credit_approval_request, credit_score, credit_duration
+    processed_response = check_credit_approval_request_result(
+        validated_response, credit_score, credit_duration
     )
 
     # Step 4: Save the credit approval request to the database
-    db_service.record_credit_approval_request_transaction(
-        credit_approval_request, approval_status=response
-    )
+    db_service.record_credit_approval_request_transaction(processed_response)
 
     # Step 5a: If applicable, raise an exception with errors
-    if credit_approval_request.errors != "":
-        raise HTTPException(status_code=400, detail=credit_approval_request.errors)
+    if processed_response.errors != "":
+        raise HTTPException(status_code=400, detail=processed_response.errors)
 
     # Step 5b: Return the response
-    return response
+    print(processed_response.response)
+    return processed_response.response
