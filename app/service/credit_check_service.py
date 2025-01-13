@@ -13,16 +13,18 @@ Dependencies:
     result.
 """
 
+import os
 from fastapi import HTTPException
-from app.utils.database_service import DataBaseService
-from .models.credit_approval_request import CreditApprovalRequest
-from .card_validation_interface import validate_credit_card
-from .credit_approval_checker_interface import (
+from app.service.database_service import DataBaseService
+from app.model.credit_approval_request import CreditApprovalRequest
+from app.model.credit_approval_response import CreditApprovalResponse
+from app.interface.card_validation_interface import validate_credit_card
+from app.interface.credit_approval_checker_interface import (
     check_credit_approval_request_result,
 )
 
 
-def process_credit_check(credit_approval_request: CreditApprovalRequest) -> dict:
+def process_credit_check(credit_approval_request: CreditApprovalRequest) -> str:
     """
     This function serves as the interface for the credit check processor. It validates the incoming
     credit approval request, fetches the credit score and duration from the database, runs the
@@ -34,18 +36,22 @@ def process_credit_check(credit_approval_request: CreditApprovalRequest) -> dict
         class representing the credit approval request.
     """
     # Prep: Initialize dependencies
-    db_service = DataBaseService()
+    db_service = DataBaseService(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
     # Step 1: Validate the incoming request
-    validated_response = validate_credit_card(credit_approval_request)
+    validated_response: CreditApprovalResponse = validate_credit_card(
+        credit_approval_request
+    )
 
     # Step 2: Fetch the credit score and duration from the database
+    credit_score: int
+    credit_duration: int
     credit_score, credit_duration = db_service.fetch_credit_score_and_duration_from_db(
         credit_approval_request
     )
 
     # Step 3: Run the credit check process
-    processed_response = check_credit_approval_request_result(
+    processed_response: CreditApprovalResponse = check_credit_approval_request_result(
         validated_response, credit_score, credit_duration
     )
 
@@ -57,5 +63,4 @@ def process_credit_check(credit_approval_request: CreditApprovalRequest) -> dict
         raise HTTPException(status_code=400, detail=processed_response.errors)
 
     # Step 5b: Return the response
-    print(processed_response.response)
     return processed_response.response

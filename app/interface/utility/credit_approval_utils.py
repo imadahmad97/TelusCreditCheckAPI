@@ -10,13 +10,12 @@ Classes:
 Dependencies:
     - os: The OS module provides a way of using operating system dependent functionality.
     - datetime: The datetime module supplies classes for manipulating dates and times.
-    - DataBaseService: The class to interact with the database.
     - CreditApprovalRequest: The class representing a credit approval request.
 """
 
 import os
 import datetime
-from app.models.credit_approval_response import CreditApprovalResponse
+from app.model.credit_approval_response import CreditApprovalResponse
 
 
 class CreditApprovalChecker:
@@ -46,10 +45,11 @@ class CreditApprovalChecker:
         Returns:
             bool: True if the user is over 18, False otherwise.
         """
+
         age: float = (
             datetime.datetime.now().date() - credit_approval_response.date_of_birth
-        ).days / float(os.getenv("DAYS_IN_YEAR"))
-        if age < int(os.getenv("LEGAL_AGE")):
+        ).days / float(os.getenv("DAYS_IN_YEAR", "365.2425"))
+        if age < int(os.getenv("LEGAL_AGE", "18")):
             return False
         return True
 
@@ -71,45 +71,45 @@ class CreditApprovalChecker:
         credit_criteria: dict = {
             "poor": {
                 "range": (
-                    int(os.getenv("POOR_CREDIT_MIN")),
-                    int(os.getenv("POOR_CREDIT_MAX")),
+                    int(os.getenv("POOR_CREDIT_MIN", "300")),
+                    int(os.getenv("POOR_CREDIT_MAX", "499")),
                 ),
-                "min_duration": int(os.getenv("POOR_CREDIT_MIN_DURATION")),
+                "min_duration": int(os.getenv("POOR_CREDIT_MIN_DURATION", "10")),
             },
             "fair": {
                 "range": (
-                    int(os.getenv("FAIR_CREDIT_MIN")),
-                    int(os.getenv("FAIR_CREDIT_MAX")),
+                    int(os.getenv("FAIR_CREDIT_MIN", "500")),
+                    int(os.getenv("FAIR_CREDIT_MAX", "599")),
                 ),
-                "min_duration": int(os.getenv("FAIR_CREDIT_MIN_DURATION")),
+                "min_duration": int(os.getenv("FAIR_CREDIT_MIN_DURATION", "7")),
             },
             "good": {
                 "range": (
-                    int(os.getenv("GOOD_CREDIT_MIN")),
-                    int(os.getenv("GOOD_CREDIT_MAX")),
+                    int(os.getenv("GOOD_CREDIT_MIN", "600")),
+                    int(os.getenv("GOOD_CREDIT_MAX", "699")),
                 ),
-                "min_duration": int(os.getenv("GOOD_CREDIT_MIN_DURATION")),
+                "min_duration": int(os.getenv("GOOD_CREDIT_MIN_DURATION", "5")),
             },
             "very_good": {
                 "range": (
-                    int(os.getenv("VERY_GOOD_CREDIT_MIN")),
-                    int(os.getenv("VERY_GOOD_CREDIT_MAX")),
+                    int(os.getenv("VERY_GOOD_CREDIT_MIN", "700")),
+                    int(os.getenv("VERY_GOOD_CREDIT_MAX", "749")),
                 ),
-                "min_duration": int(os.getenv("VERY_GOOD_CREDIT_MIN_DURATION")),
+                "min_duration": int(os.getenv("VERY_GOOD_CREDIT_MIN_DURATION", "3")),
             },
             "excellent": {
                 "range": (
-                    int(os.getenv("EXCELLENT_CREDIT_MIN")),
-                    int(os.getenv("EXCELLENT_CREDIT_MAX")),
+                    int(os.getenv("EXCELLENT_CREDIT_MIN", "750")),
+                    int(os.getenv("EXCELLENT_CREDIT_MAX", "799")),
                 ),
-                "min_duration": int(os.getenv("EXCELLENT_CREDIT_MIN_DURATION")),
+                "min_duration": int(os.getenv("EXCELLENT_CREDIT_MIN_DURATION", "1")),
             },
             "exceptional": {
                 "range": (
-                    int(os.getenv("EXCEPTIONAL_CREDIT_MIN")),
-                    int(os.getenv("EXCEPTIONAL_CREDIT_MAX")),
+                    int(os.getenv("EXCEPTIONAL_CREDIT_MIN", "800")),
+                    int(os.getenv("EXCEPTIONAL_CREDIT_MAX", "850")),
                 ),
-                "min_duration": int(os.getenv("EXCEPTIONAL_CREDIT_MIN_DURATION")),
+                "min_duration": int(os.getenv("EXCEPTIONAL_CREDIT_MIN_DURATION", "0")),
             },
         }
 

@@ -5,7 +5,7 @@ class CreditApprovalResponse:
     def __init__(
         self,
         is_existing_customer: bool,
-        date_of_birth: str | datetime.date,
+        date_of_birth: datetime.date,
         is_approved: bool,
         errors: str = "",
         response: str = "",

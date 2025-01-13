@@ -18,8 +18,8 @@ Dependencies:
 
 from typing import Annotated
 from fastapi import FastAPI, Form
-from app.models.credit_approval_request import CreditApprovalRequest
-from app.credit_check_processor import process_credit_check
+from app.model.credit_approval_request import CreditApprovalRequest
+from app.service.credit_check_service import process_credit_check
 
 app = FastAPI()
 
@@ -27,7 +27,7 @@ app = FastAPI()
 @app.post("/check_credit")
 def credit_check_route(
     credit_approval_request: Annotated[CreditApprovalRequest, Form()]
-) -> dict:
+) -> dict | str:
     """
     Function with the API endpoint to check the approval status of a credit approval request.
 

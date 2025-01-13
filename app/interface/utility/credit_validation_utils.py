@@ -13,7 +13,7 @@ Dependencies:
 
 import datetime
 import os
-from app.models.credit_approval_request import CreditApprovalRequest
+from app.model.credit_approval_request import CreditApprovalRequest
 
 
 class CreditCardValidator:
@@ -44,14 +44,13 @@ class CreditCardValidator:
 
         """
         if (
-            not int(os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH"))
+            not int(os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH", "8"))
             <= len(credit_approval_request.credit_card_number)
-            <= int(os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH"))
+            <= int(os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH", "19"))
         ):
             return f"Card number must be between {os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH")} and {os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH")} digits; "
 
-        else:
-            return ""
+        return ""
 
     @staticmethod
     def return_cvv_length_errors(
@@ -66,14 +65,13 @@ class CreditCardValidator:
             validate.
         """
         if (
-            not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH"))
+            not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH", "3"))
             <= len(credit_approval_request.cvv)
-            <= int(os.getenv("MAXIMUM_CREDIT_CARD_CVV_LENGTH"))
+            <= int(os.getenv("MAXIMUM_CREDIT_CARD_CVV_LENGTH", "4"))
         ):
             return f"CVV must be {os.getenv('MINIMUM_CREDIT_CARD_CVV_LENGTH')} or {os.getenv('MAXIMUM_CREDIT_CARD_CVV_LENGTH')} digits; "
 
-        else:
-            return ""
+        return ""
 
     @staticmethod
     def return_card_expired_errors(
@@ -90,8 +88,7 @@ class CreditCardValidator:
         if credit_approval_request.expiration_date < datetime.date.today():
             return "Card is expired; "
 
-        else:
-            return ""
+        return ""
 
     @staticmethod
     def return_card_issuer_errors(
@@ -112,8 +109,7 @@ class CreditCardValidator:
         ]:
             return "Invalid credit card issuer; "
 
-        else:
-            return ""
+        return ""
 
     @staticmethod
     def _separate_digits_by_position(
@@ -186,7 +182,7 @@ class CreditCardValidator:
     @staticmethod
     def return_luhn_validation_errors(
         credit_approval_request: CreditApprovalRequest,
-    ) -> bool:
+    ) -> str:
         """
         Perform the Luhn algorithm check on the credit card number of the credit approval request.
 
@@ -209,8 +205,8 @@ class CreditCardValidator:
             doubled_even_digits
         )
         if (sum(odd_digits) + sum(reduced_even_digits)) % int(
-            os.getenv("LUHN_MODULUS")
+            os.getenv("LUHN_MODULUS", "10")
         ) != 0:
             return "Invalid credit card number; "
-        else:
-            return ""
+
+        return ""

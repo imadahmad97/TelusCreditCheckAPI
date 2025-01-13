@@ -15,9 +15,10 @@ Dependencies:
 
 import random
 import os
-from ..models.credit_approval_request import CreditApprovalRequest
-from ..models.credit_approval_response import CreditApprovalResponse
+from app.model.credit_approval_request import CreditApprovalRequest
+from app.model.credit_approval_response import CreditApprovalResponse
 from supabase import create_client, Client
+from typing import Any
 
 
 class DataBaseService:
@@ -38,21 +39,19 @@ class DataBaseService:
         request in the Supabase database.
     """
 
-    def __init__(self):
+    def __init__(self, url, key):
         """
         Initialize the Supabase client's PostgreSQL database for the application.
 
         Returns:
             Client: The Supabase client
         """
-        url: str = os.getenv("SUPABASE_URL")
-        key: str = os.getenv("SUPABASE_KEY")
         self.supabase: Client = create_client(url, key)
 
     def fetch_credit_score_and_duration_from_db(
         self,
         credit_approval_request: CreditApprovalRequest,
-    ) -> dict:
+    ) -> tuple:
         """
         Fetch the credit score and credit duration of the user by querying the Supabase database.
 
@@ -63,7 +62,7 @@ class DataBaseService:
             dict: A dictionary containing the credit score and credit duration of the user.
         """
         db = self.supabase
-        data: dict = (
+        data: Any = (
             db.table("credit_scores")
             .select("score, duration")
             .eq("card_number", credit_approval_request.credit_card_number)
@@ -75,16 +74,16 @@ class DataBaseService:
             credit_score = result["score"] = data.data[0]["score"]
         except IndexError:
             credit_score = result["score"] = random.randint(
-                int(os.getenv("RANDOM_CREDIT_SCORE_MIN")),
-                int(os.getenv("RANDOM_CREDIT_SCORE_MAX")),
+                int(os.getenv("RANDOM_CREDIT_SCORE_MIN", "300")),
+                int(os.getenv("RANDOM_CREDIT_SCORE_MAX", "850")),
             )
 
         try:
             credit_duration = result["duration"] = data.data[0]["duration"]
         except IndexError:
             credit_duration = result["duration"] = random.randint(
-                int(os.getenv("RANDOM_CREDIT_DURATION_MIN")),
-                int(os.getenv("RANDOM_CREDIT_DURATION_MAX")),
+                int(os.getenv("RANDOM_CREDIT_DURATION_MIN", "0")),
+                int(os.getenv("RANDOM_CREDIT_DURATION_MAX", "10")),
             )
 
         return credit_score, credit_duration

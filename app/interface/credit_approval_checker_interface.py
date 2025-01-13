@@ -9,15 +9,15 @@ Dependencies:
     - CreditApprovalRequest: The class representing a credit approval request.
 """
 
-from app.utils.approval_utils.credit_approval_checker import CreditApprovalChecker
-from app.models.credit_approval_response import CreditApprovalResponse
+from app.interface.utility.credit_approval_utils import CreditApprovalChecker
+from app.model.credit_approval_response import CreditApprovalResponse
 
 
 def check_credit_approval_request_result(
     credit_approval_response: CreditApprovalResponse,
     credit_score: int,
     credit_duration: int,
-) -> bool:
+) -> CreditApprovalResponse:
     """
     This function checks the credit approval request result based on the credit score and duration
     from the database, and the credit approval request.
