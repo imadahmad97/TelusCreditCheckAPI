@@ -13,7 +13,6 @@ Dependencies:
 
 import datetime
 import os
-from app.model.credit_approval_request import CreditApprovalRequest
 
 
 class CreditCardValidator:
@@ -31,9 +30,7 @@ class CreditCardValidator:
     """
 
     @staticmethod
-    def return_card_number_length_errors(
-        credit_approval_request: CreditApprovalRequest,
-    ) -> str:
+    def get_card_number_length_errors(credit_card_number: str) -> str:
         """
         Validates the length of the credit card number to be between 16 and 19 digits, and appends
         the errors to the credit approval request if the length is invalid.
@@ -45,7 +42,7 @@ class CreditCardValidator:
         """
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH", "8"))
-            <= len(credit_approval_request.credit_card_number)
+            <= len(credit_card_number)
             <= int(os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH", "19"))
         ):
             return f"Card number must be between {os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH")} and {os.getenv("MAXIMUM_CREDIT_CARD_NUMBER_LENGTH")} digits; "
@@ -53,8 +50,8 @@ class CreditCardValidator:
         return ""
 
     @staticmethod
-    def return_cvv_length_errors(
-        credit_approval_request: CreditApprovalRequest,
+    def get_cvv_length_errors(
+        cvv: str,
     ) -> str:
         """
         Validates the length of the CVV to be between 3 and 4 digits, and appends the errors to the
@@ -66,7 +63,7 @@ class CreditCardValidator:
         """
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH", "3"))
-            <= len(credit_approval_request.cvv)
+            <= len(cvv)
             <= int(os.getenv("MAXIMUM_CREDIT_CARD_CVV_LENGTH", "4"))
         ):
             return f"CVV must be {os.getenv('MINIMUM_CREDIT_CARD_CVV_LENGTH')} or {os.getenv('MAXIMUM_CREDIT_CARD_CVV_LENGTH')} digits; "
@@ -74,8 +71,8 @@ class CreditCardValidator:
         return ""
 
     @staticmethod
-    def return_card_expired_errors(
-        credit_approval_request: CreditApprovalRequest,
+    def get_card_expired_errors(
+        expiration_date: datetime.date,
     ) -> str:
         """
         Validates the expiration date of the credit card to be in the future, and appends the errors
@@ -85,14 +82,14 @@ class CreditCardValidator:
             credit_approval_request (CreditApprovalRequest): The credit approval request to
             validate.
         """
-        if credit_approval_request.expiration_date < datetime.date.today():
+        if expiration_date < datetime.date.today():
             return "Card is expired; "
 
         return ""
 
     @staticmethod
-    def return_card_issuer_errors(
-        credit_approval_request: CreditApprovalRequest,
+    def get_card_issuer_errors(
+        credit_card_issuer: str,
     ) -> str:
         """
         Validates the credit card issuer to be Visa, MasterCard, or American Express, and appends
@@ -102,7 +99,7 @@ class CreditCardValidator:
             credit_approval_request (CreditApprovalRequest): The credit approval request to
             validate.
         """
-        if credit_approval_request.credit_card_issuer.lower() not in [
+        if credit_card_issuer.lower() not in [
             "visa",
             "mastercard",
             "american express",
@@ -113,7 +110,7 @@ class CreditCardValidator:
 
     @staticmethod
     def _separate_digits_by_position(
-        credit_approval_request: CreditApprovalRequest,
+        credit_card_number: str,
     ) -> tuple:
         """
         Separate the credit card number digits by position into odd and even digits.
@@ -128,16 +125,12 @@ class CreditCardValidator:
         raw_odd_digits: list = []
         raw_even_digits: list = []
         i = 1
-        while i <= len(credit_approval_request.credit_card_number):
+        while i <= len(credit_card_number):
             if i % 2 != 0:
-                raw_odd_digits.append(
-                    int(credit_approval_request.credit_card_number[-i])
-                )
+                raw_odd_digits.append(int(credit_card_number[-i]))
                 i += 1
             else:
-                raw_even_digits.append(
-                    int(credit_approval_request.credit_card_number[-i])
-                )
+                raw_even_digits.append(int(credit_card_number[-i]))
                 i += 1
 
         return raw_odd_digits, raw_even_digits
@@ -180,8 +173,8 @@ class CreditCardValidator:
         return reduced_even_digits
 
     @staticmethod
-    def return_luhn_validation_errors(
-        credit_approval_request: CreditApprovalRequest,
+    def get_luhn_validation_errors(
+        credit_card_number: str,
     ) -> str:
         """
         Perform the Luhn algorithm check on the credit card number of the credit approval request.
@@ -196,7 +189,7 @@ class CreditCardValidator:
         odd_digits: list
         even_digits: list
         odd_digits, even_digits = CreditCardValidator._separate_digits_by_position(
-            credit_approval_request
+            credit_card_number
         )
         doubled_even_digits: list = (
             CreditCardValidator._double_digits_at_even_positions(even_digits)

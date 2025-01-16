@@ -15,7 +15,6 @@ Dependencies:
 
 import os
 import datetime
-from app.model.credit_approval_response import CreditApprovalResponse
 
 
 class CreditApprovalChecker:
@@ -32,8 +31,8 @@ class CreditApprovalChecker:
     """
 
     @staticmethod
-    def check_if_creditee_is_of_legal_age_from_credit_approval_request(
-        credit_approval_response: CreditApprovalResponse,
+    def is_creditee_is_of_legal_age(
+        date_of_birth: datetime.date,
     ) -> bool:
         """
         Check if the user is of legal age from the credit approval request.
@@ -46,15 +45,15 @@ class CreditApprovalChecker:
             bool: True if the user is over 18, False otherwise.
         """
 
-        age: float = (
-            datetime.datetime.now().date() - credit_approval_response.date_of_birth
-        ).days / float(os.getenv("DAYS_IN_YEAR", "365.2425"))
+        age: float = (datetime.datetime.now().date() - date_of_birth).days / float(
+            os.getenv("DAYS_IN_YEAR", "365.2425")
+        )
         if age < int(os.getenv("LEGAL_AGE", "18")):
             return False
         return True
 
     @staticmethod
-    def check_if_credit_score_and_credit_duration_within_approval_limits(
+    def is_credit_score_and_credit_duration_within_approval_limits(
         credit_score: int, credit_duration: int
     ) -> bool:
         """

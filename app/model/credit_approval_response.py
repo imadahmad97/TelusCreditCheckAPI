@@ -17,11 +17,3 @@ class CreditApprovalResponse:
         self.errors = errors
         self.response = response
         self.credit_card_number = credit_card_number
-
-    def approve(self):
-        self.is_approved = True
-        self.response = {"credit_approval": "approved"}
-
-    def deny(self):
-        self.is_approved = False
-        self.response = {"credit_approval": "denied"}

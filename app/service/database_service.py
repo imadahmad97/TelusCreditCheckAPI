@@ -15,8 +15,6 @@ Dependencies:
 
 import random
 import os
-from app.model.credit_approval_request import CreditApprovalRequest
-from app.model.credit_approval_response import CreditApprovalResponse
 from supabase import create_client, Client
 from typing import Any
 
@@ -48,10 +46,7 @@ class DataBaseService:
         """
         self.supabase: Client = create_client(url, key)
 
-    def fetch_credit_score_and_duration_from_db(
-        self,
-        credit_approval_request: CreditApprovalRequest,
-    ) -> tuple:
+    def fetch_credit_score_and_duration_from_db(self, credit_card_number) -> tuple:
         """
         Fetch the credit score and credit duration of the user by querying the Supabase database.
 
@@ -65,7 +60,7 @@ class DataBaseService:
         data: Any = (
             db.table("credit_scores")
             .select("score, duration")
-            .eq("card_number", credit_approval_request.credit_card_number)
+            .eq("card_number", credit_card_number)
             .execute()
         )
         result = {}
@@ -90,7 +85,9 @@ class DataBaseService:
 
     def record_credit_approval_request_transaction(
         self,
-        credit_approval_response: CreditApprovalResponse,
+        credit_card_number: str,
+        is_approved: bool,
+        errors: str,
     ) -> None:
         """
         Record the transaction of the credit approval request in the Supabase database.
@@ -105,9 +102,9 @@ class DataBaseService:
             db.table("transactions")
             .insert(
                 {
-                    "card_number": credit_approval_response.credit_card_number,
-                    "approved?": credit_approval_response.is_approved,
-                    "errors": credit_approval_response.errors,
+                    "card_number": credit_card_number,
+                    "approved?": is_approved,
+                    "errors": errors,
                 }
             )
             .execute()

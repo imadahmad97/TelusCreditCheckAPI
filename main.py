@@ -17,11 +17,14 @@ Dependencies:
 """
 
 from typing import Annotated
+import os
 from fastapi import FastAPI, Form
 from app.model.credit_approval_request import CreditApprovalRequest
 from app.service.credit_check_service import process_credit_check
+from app.service.database_service import DataBaseService
 
 app = FastAPI()
+db_service = DataBaseService(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 
 @app.post("/check_credit")
@@ -37,4 +40,4 @@ def credit_check_route(
     Returns:
         dict: The result of the credit check.
     """
-    return process_credit_check(credit_approval_request)
+    return process_credit_check(credit_approval_request, db_service)

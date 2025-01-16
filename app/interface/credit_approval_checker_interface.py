@@ -10,14 +10,15 @@ Dependencies:
 """
 
 from app.interface.utility.credit_approval_utils import CreditApprovalChecker
-from app.model.credit_approval_response import CreditApprovalResponse
+import datetime
 
 
 def check_credit_approval_request_result(
-    credit_approval_response: CreditApprovalResponse,
+    date_of_birth: datetime.date,
+    is_existing_customer: bool,
     credit_score: int,
     credit_duration: int,
-) -> CreditApprovalResponse:
+) -> bool:
     """
     This function checks the credit approval request result based on the credit score and duration
     from the database, and the credit approval request.
@@ -27,24 +28,21 @@ def check_credit_approval_request_result(
         credit_score (int): The credit score from the database.
         credit_duration (int): The credit duration from the database.
     """
-    # Prep: Initialize the CreditApprovalChecker
-    credit_approval_checker = CreditApprovalChecker()
+    # Prep: Initialize the CreditApprovalChecker and variables
+    creditee_is_of_legal_age = CreditApprovalChecker.is_creditee_is_of_legal_age(
+        date_of_birth
+    )
+    credit_score_and_duration_within_approval_limits = CreditApprovalChecker.is_credit_score_and_credit_duration_within_approval_limits(
+        credit_score, credit_duration
+    )
 
     # Step 1: Check if the user is an existing customer, and approve them if they are
-    if credit_approval_response.is_existing_customer:
-        credit_approval_response.approve()
+    if is_existing_customer:
+        return True
 
     # Step 2: Check if the user is of legal age and their credit score and credit duration are
     # within the approval limits, and approve them if they are
-    elif credit_approval_checker.check_if_creditee_is_of_legal_age_from_credit_approval_request(
-        credit_approval_response
-    ) and credit_approval_checker.check_if_credit_score_and_credit_duration_within_approval_limits(
-        credit_score, credit_duration
-    ):
-        credit_approval_response.approve()
-
+    if creditee_is_of_legal_age and credit_score_and_duration_within_approval_limits:
+        return True
     # Step 3: Deny the user if they do not meet the approval criteria
-    else:
-        credit_approval_response.deny()
-
-    return credit_approval_response
+    return False

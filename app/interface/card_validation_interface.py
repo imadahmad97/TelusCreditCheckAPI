@@ -1,11 +1,13 @@
-from app.model.credit_approval_request import CreditApprovalRequest
-from app.model.credit_approval_response import CreditApprovalResponse
-from app.interface.utility import credit_validation_utils
+from app.interface.utility.credit_validation_utils import CreditCardValidator
+import datetime
 
 
-def validate_credit_card(
-    credit_approval_request: CreditApprovalRequest,
-) -> CreditApprovalResponse:
+def get_card_validation_errors(
+    credit_card_number: str,
+    cvv: str,
+    expiration_date: datetime.date,
+    credit_card_issuer: str,
+) -> str:
     """
     Validates the credit card information.
 
@@ -13,43 +15,31 @@ def validate_credit_card(
         credit_approval_request (CreditApprovalRequest): The credit approval request to
         validate.
     """
-    # Prep: Initialize dependencies
-    card_validator = credit_validation_utils.CreditCardValidator()
+    # Prep: Initialize validation error list
     validation_errors: list = []
 
     # Step 1: Validate card number length
     validation_errors.append(
-        card_validator.return_card_number_length_errors(credit_approval_request)
+        CreditCardValidator.get_card_number_length_errors(credit_card_number)
     )
 
     # Step 2: Validate the CVV number length
-    validation_errors.append(
-        card_validator.return_cvv_length_errors(credit_approval_request)
-    )
+    validation_errors.append(CreditCardValidator.get_cvv_length_errors(cvv))
 
     # Step 3: Validate the card expiration date
     validation_errors.append(
-        card_validator.return_card_expired_errors(credit_approval_request)
+        CreditCardValidator.get_card_expired_errors(expiration_date)
     )
 
     # Step 4: Validate the credit card issuer
     validation_errors.append(
-        card_validator.return_card_issuer_errors(credit_approval_request)
+        CreditCardValidator.get_card_issuer_errors(credit_card_issuer)
     )
 
     # Step 5: Perform the Luhn check
     validation_errors.append(
-        card_validator.return_luhn_validation_errors(credit_approval_request)
+        CreditCardValidator.get_luhn_validation_errors(credit_card_number)
     )
 
-    # Step 6: Create and return the credit approval response
-    validated_response: CreditApprovalResponse = CreditApprovalResponse(
-        is_existing_customer=credit_approval_request.is_existing_customer,
-        date_of_birth=credit_approval_request.date_of_birth,
-        is_approved=False,
-        errors="".join(validation_errors),
-        response="",
-        credit_card_number=credit_approval_request.credit_card_number,
-    )
-
-    return validated_response
+    # Step 6: Return the validation errors
+    return "".join(validation_errors)
