@@ -10,7 +10,6 @@ Classes:
 Dependencies:
     - os: The OS module provides a way of using operating system dependent functionality.
     - datetime: The datetime module supplies classes for manipulating dates and times.
-    - CreditApprovalRequest: The class representing a credit approval request.
 """
 
 import os
@@ -24,10 +23,10 @@ class CreditApprovalChecker:
     of legal age and their credit score and credit duration are within the approval limits.
 
     Methods:
-        check_if_creditee_is_of_legal_age_from_credit_approval_request(credit_approval_request):
-            Check if the user is of legal age from the credit approval request.
-        check_if_credit_score_and_credit_duration_within_approval_limits(credit_approval_request):
-            Checks if the credit score and credit duration are within the approval limits.
+        is_creditee_is_of_legal_age: Check if the user is of legal age from the credit approval
+        request.
+        is_credit_score_and_credit_duration_within_approval_limits: Checks if the credit score and
+        credit duration are within the approval limits.
     """
 
     @staticmethod
@@ -38,8 +37,7 @@ class CreditApprovalChecker:
         Check if the user is of legal age from the credit approval request.
 
         Parameters:
-            credit_approval_request(CreditApprovalRequest): The credit approval request to check the
-            age for.
+            date_of_birth(datetime.date): The date of birth of the user.
 
         Returns:
             bool: True if the user is over 18, False otherwise.
@@ -60,8 +58,8 @@ class CreditApprovalChecker:
         Checks if the credit score and credit duration are within the approval limits.
 
         Parameters:
-            credit_approval_request(CreditApprovalRequest): The request to check the credit score
-            and duration for.
+            credit_score(int): The credit score of the user.
+            credit_duration(int): The credit duration of the user.
 
         Returns:
             bool: True if the user is approved, False otherwise.

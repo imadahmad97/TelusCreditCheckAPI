@@ -8,15 +8,16 @@ Classes:
 
 Dependencies:
     - random: This module implements pseudo-random number generators for various distributions.
-    - os: The OS module provides a way of using operating system dependent functionality.
-    - init_db: The function to initialize the Supabase client.
-    - CreditApprovalRequest: The class representing a credit approval request.
+    - os: This module provides a portable way of using operating system-dependent functionality.
+    - Any: A special type that indicates an unconstrained type.
+    - create_client: A function that creates a Supabase client object.
+    - Client: The Supabase client object for interacting with the database.
 """
 
 import random
 import os
-from supabase import create_client, Client
 from typing import Any
+from supabase import create_client, Client
 
 
 class DataBaseService:
@@ -26,13 +27,11 @@ class DataBaseService:
     credit approval request.
 
     Attributes:
-        db (SupabaseClient): The Supabase client used to interact with the database
+        supabase (Client): The Supabase client object for interacting with the
 
     Methods:
-        check_credit_score_for_credit_approval_request: Check the credit score of the user by
-        querying the Supabase database.
-        check_credit_duration_for_credit_approval_request: Check the credit duration that the user
-        has had credit by querying the Supabase database.
+        fetch_credit_score_and_duration_from_db: Fetch the credit score and credit duration of the
+        user by querying the Supabase database.
         record_credit_approval_request_transaction: Record the transaction of the credit approval
         request in the Supabase database.
     """
@@ -40,9 +39,6 @@ class DataBaseService:
     def __init__(self, url, key):
         """
         Initialize the Supabase client's PostgreSQL database for the application.
-
-        Returns:
-            Client: The Supabase client
         """
         self.supabase: Client = create_client(url, key)
 
@@ -51,11 +47,12 @@ class DataBaseService:
         Fetch the credit score and credit duration of the user by querying the Supabase database.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The user to fetch the data for.
+            credit_card_number (str): The credit card number of the user.
 
         Returns:
-            dict: A dictionary containing the credit score and credit duration of the user.
+            tuple: A tuple containing the credit score and credit duration of the user.
         """
+
         db = self.supabase
         data: Any = (
             db.table("credit_scores")
@@ -93,9 +90,10 @@ class DataBaseService:
         Record the transaction of the credit approval request in the Supabase database.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to record.
-            errors (str): The errors that occurred during the credit approval request.
-            approved (bool): Whether the credit was approved or denied.
+            credit_card_number (str): The credit card number of the user.
+            is_approved (bool): A boolean indicating if the credit approval request was approved.
+            errors (str): A string containing the errors encountered during the credit approval
+            request.
         """
         db = self.supabase
         (

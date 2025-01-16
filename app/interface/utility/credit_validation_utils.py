@@ -8,7 +8,6 @@ Classes:
 
 Dependencies:
     - datetime: The module supplies classes for manipulating dates and times.
-    - CreditApprovalRequest: The class representing a credit approval request.
 """
 
 import datetime
@@ -36,9 +35,7 @@ class CreditCardValidator:
         the errors to the credit approval request if the length is invalid.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to
-            validate.
-
+            credit_card_number (str): The credit card number to validate.
         """
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_NUMBER_LENGTH", "8"))
@@ -58,8 +55,7 @@ class CreditCardValidator:
         credit approval request if the length is invalid.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to
-            validate.
+            cvv (str): The CVV number to validate.
         """
         if (
             not int(os.getenv("MINIMUM_CREDIT_CARD_CVV_LENGTH", "3"))
@@ -79,8 +75,7 @@ class CreditCardValidator:
         to the credit approval request if the card is expired.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to
-            validate.
+            expiration_date (datetime.date): The expiration date to validate.
         """
         if expiration_date < datetime.date.today():
             return "Card is expired; "
@@ -96,8 +91,7 @@ class CreditCardValidator:
         the errors to the credit approval request if the issuer is invalid.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to
-            validate.
+            credit_card_issuer (str): The credit card issuer to validate.
         """
         if credit_card_issuer.lower() not in [
             "visa",
@@ -116,8 +110,7 @@ class CreditCardValidator:
         Separate the credit card number digits by position into odd and even digits.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to separate
-                the digits from.
+            credit_card_number (str): The credit card number to separate.
 
         Returns:
             tuple: A tuple containing the odd and even digits of the credit card number.
@@ -180,7 +173,7 @@ class CreditCardValidator:
         Perform the Luhn algorithm check on the credit card number of the credit approval request.
 
         Parameters:
-            credit_approval_request (CreditApprovalRequest): The credit approval request to check.
+            credit_card_number (str): The credit card number to validate.
 
         Returns:
             bool: True if the credit card number is valid according to the Luhn algorithm, False

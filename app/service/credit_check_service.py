@@ -5,11 +5,11 @@ and duration from the database, runs the credit check process, saves the credit 
 the database, and returns the response.
 
 Dependencies:
-    - HTTPException: An exception to raise when an HTTP error occurs.
-    - CreditApprovalRequest: The class representing a credit approval request.
-    - validate_credit_card: The function to validate the credit card details.
-    - check_credit_approval_request_result: The function to check the credit approval request
-    result.
+    - HTTPException: The exception class for handling HTTP errors.
+    - CreditApprovalRequest: The class representing the credit approval request.
+    - CreditApprovalResponse: The class representing the credit approval response.
+    - get_card_validation_errors: The function that validates the credit card information.
+    - get_credit_approval_request_result: The function that runs the credit check process.
 """
 
 from fastapi import HTTPException
@@ -17,7 +17,7 @@ from app.model.credit_approval_request import CreditApprovalRequest
 from app.model.credit_approval_response import CreditApprovalResponse
 from app.interface.card_validation_interface import get_card_validation_errors
 from app.interface.credit_approval_checker_interface import (
-    check_credit_approval_request_result,
+    get_credit_approval_request_result,
 )
 
 
@@ -36,7 +36,7 @@ def process_credit_check(
         db_service: The database service object.
     """
 
-    # Prep Step: Initialize the response object and variables
+    # Prep Step: Initialize variables from the credit approval request object
     credit_card_number = credit_approval_request.credit_card_number
     cvv = credit_approval_request.cvv
     expiration_date = credit_approval_request.expiration_date
@@ -44,6 +44,12 @@ def process_credit_check(
     credit_card_issuer = credit_approval_request.credit_card_issuer
     is_existing_customer = credit_approval_request.is_existing_customer
 
+    # Prep Step: Initialize credit score and duration from the database
+    credit_score, credit_duration = db_service.fetch_credit_score_and_duration_from_db(
+        credit_card_number
+    )
+
+    # Prep Step: Initialize the response object
     credit_approval_response: CreditApprovalResponse = CreditApprovalResponse(
         is_existing_customer=is_existing_customer,
         date_of_birth=date_of_birth,
@@ -51,35 +57,28 @@ def process_credit_check(
         errors="",
     )
 
-    # Step 1: Validate the incoming request
+    # Step 1: Append validation errors to the response object
     credit_approval_response.errors += get_card_validation_errors(
         credit_card_number, cvv, expiration_date, credit_card_issuer
     )
 
-    # Step 2: Fetch the credit score and duration from the database
-    credit_score: int
-    credit_duration: int
-    credit_score, credit_duration = db_service.fetch_credit_score_and_duration_from_db(
-        credit_card_number
-    )
-
-    # Step 3: Run the credit check process
-    credit_approval_response.is_approved = check_credit_approval_request_result(
+    # Step 2: Run the credit check process and update the response object
+    credit_approval_response.is_approved = get_credit_approval_request_result(
         date_of_birth, is_existing_customer, credit_score, credit_duration
     )
 
-    # Step 4: Save the credit approval request to the database
+    # Step 3: Save the credit approval request to the database
     db_service.record_credit_approval_request_transaction(
         credit_approval_response.credit_card_number,
         credit_approval_response.is_approved,
         credit_approval_response.errors,
     )
 
-    # Step 5a: If applicable, raise an exception with errors
+    # Step 4a: If applicable, raise an exception with errors
     if credit_approval_response.errors != "":
         raise HTTPException(status_code=400, detail=credit_approval_response.errors)
 
-    # Step 5b: Return the response
+    # Step 4b: Return the response
     if credit_approval_response.is_approved:
         return {"credit_approval": "approved"}
     return {"credit_approval": "denied"}

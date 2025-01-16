@@ -2,6 +2,22 @@ import datetime
 
 
 class CreditApprovalResponse:
+    """
+    A class to represent a single credit approval response. This class is used to store the
+    response of the credit approval service.
+
+    Attributes:
+        is_existing_customer (bool): A flag indicating if the user for whom the credit approval
+        request is an existing customer.
+        date_of_birth (datetime.date): The date of birth of the user for whom the credit approval is
+        requested.
+        is_approved (bool): A flag indicating if the credit approval request was approved.
+        errors (str): A string containing any errors that occurred during the credit approval process.
+        response (str): A string containing the response from the credit approval service.
+        credit_card_number (str): The credit card number of the user for whom the credit approval is
+        requested.
+    """
+
     def __init__(
         self,
         is_existing_customer: bool,

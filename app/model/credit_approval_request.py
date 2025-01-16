@@ -16,11 +16,16 @@ class CreditApprovalRequest(BaseModel):
         cvv (str): The CVV of the credit card of the user for whom the credit approval is requested.
         credit_card_issuer (str): The issuer of the credit card of the user for whom the credit
         approval is requested.
-        errors (str): The errors that occurred during the credit approval request.
+        date_of_birth (datetime.date): The date of birth of the user for whom the credit approval is
+        requested.
+        expiration_date (datetime.date): The expiration date of the credit card of the user for whom
+        the credit approval is requested.
 
     Methods:
-        _convert_dob_and_expiration_from_string_to_datetime: Parses the date of birth and expiration
-        date in the credit approval request from strings to datetime.date objects.
+        date_of_birth (property): The date of birth of the user for whom the credit approval is
+        requested.
+        expiration_date (property): The expiration date of the credit card of the user for whom the
+        credit approval is requested.
     """
 
     first_name: str
@@ -29,7 +34,6 @@ class CreditApprovalRequest(BaseModel):
     credit_card_number: str
     cvv: str
     credit_card_issuer: str
-    errors: str = ""
 
     _date_of_birth: datetime.date
     _expiration_date: datetime.date

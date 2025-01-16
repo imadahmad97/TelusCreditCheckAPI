@@ -12,8 +12,10 @@ def get_card_validation_errors(
     Validates the credit card information.
 
     Parameters:
-        credit_approval_request (CreditApprovalRequest): The credit approval request to
-        validate.
+        credit_card_number (str): The credit card number to validate.
+        cvv (str): The CVV number to validate.
+        expiration_date (datetime.date): The expiration date to validate.
+        credit_card_issuer (str): The credit card issuer to validate.
     """
     # Prep: Initialize validation error list
     validation_errors: list = []
