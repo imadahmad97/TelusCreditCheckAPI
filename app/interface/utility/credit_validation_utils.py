@@ -10,6 +10,7 @@ Dependencies:
     - datetime: The module supplies classes for manipulating dates and times.
 """
 
+import logging
 import datetime
 import os
 
@@ -98,7 +99,7 @@ class CreditCardValidator:
             "mastercard",
             "american express",
         ]:
-            return "Invalid credit card issuer; "
+            return "Invalid credit card issuer type; "
 
         return ""
 
@@ -179,6 +180,13 @@ class CreditCardValidator:
             bool: True if the credit card number is valid according to the Luhn algorithm, False
                 otherwise.
         """
+        if not isinstance(credit_card_number, str):
+            logging.error(
+                "Invalid type for credit_card_number: Expected str, got %s",
+                type(credit_card_number).__name__,
+            )
+            return "Invalid credit card number type; "
+
         odd_digits: list
         even_digits: list
         odd_digits, even_digits = CreditCardValidator._separate_digits_by_position(

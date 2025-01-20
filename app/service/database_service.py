@@ -16,6 +16,7 @@ Dependencies:
 
 import random
 import os
+import logging
 from typing import Any
 from supabase import create_client, Client
 
@@ -40,7 +41,12 @@ class DataBaseService:
         """
         Initialize the Supabase client's PostgreSQL database for the application.
         """
-        self.supabase: Client = create_client(url, key)
+        try:
+            self.supabase: Client = create_client(url, key)
+        except Exception as e:
+            raise ConnectionError(
+                f"Error initializing connection to the database service: {e}"
+            ) from e
 
     def fetch_credit_score_and_duration_from_db(self, credit_card_number) -> tuple:
         """
@@ -54,12 +60,18 @@ class DataBaseService:
         """
 
         db = self.supabase
-        data: Any = (
-            db.table("credit_scores")
-            .select("score, duration")
-            .eq("card_number", credit_card_number)
-            .execute()
-        )
+
+        try:
+            data: Any = (
+                db.table("credit_scores")
+                .select("score, duration")
+                .eq("card_number", credit_card_number)
+                .execute()
+            )
+        except Exception as e:
+            raise ConnectionError(
+                f"Error fetching credit score and duration from the database: {e}"
+            ) from e
         result = {}
 
         try:
@@ -96,14 +108,19 @@ class DataBaseService:
             request.
         """
         db = self.supabase
-        (
-            db.table("transactions")
-            .insert(
-                {
-                    "card_number": credit_card_number,
-                    "approved?": is_approved,
-                    "errors": errors,
-                }
+        try:
+            (
+                db.table("transactions")
+                .insert(
+                    {
+                        "card_number": credit_card_number,
+                        "approved?": is_approved,
+                        "errors": errors,
+                    }
+                )
+                .execute()
             )
-            .execute()
-        )
+        except Exception as e:
+            raise ConnectionError(
+                f"Error recording credit approval request transaction: {e}"
+            ) from e
