@@ -36,35 +36,33 @@ def process_credit_check(
         db_service: The database service object.
     """
 
-    # Prep Step: Initialize variables from the credit approval request object
-    credit_card_number = credit_approval_request.credit_card_number
-    cvv = credit_approval_request.cvv
-    expiration_date = credit_approval_request.expiration_date
-    date_of_birth = credit_approval_request.date_of_birth
-    credit_card_issuer = credit_approval_request.credit_card_issuer
-    is_existing_customer = credit_approval_request.is_existing_customer
-
     # Prep Step: Initialize credit score and duration from the database
     credit_score, credit_duration = db_service.fetch_credit_score_and_duration_from_db(
-        credit_card_number
+        credit_approval_request.credit_card_number
     )
 
     # Prep Step: Initialize the response object
     credit_approval_response: CreditApprovalResponse = CreditApprovalResponse(
-        is_existing_customer=is_existing_customer,
-        date_of_birth=date_of_birth,
+        is_existing_customer=credit_approval_request.is_existing_customer,
+        date_of_birth=credit_approval_request.date_of_birth,
         is_approved=False,
         errors="",
     )
 
     # Step 1: Append validation errors to the response object
     credit_approval_response.errors += get_card_validation_errors(
-        credit_card_number, cvv, expiration_date, credit_card_issuer
+        credit_approval_request.credit_card_number,
+        credit_approval_request.cvv,
+        credit_approval_request.expiration_date,
+        credit_approval_request.credit_card_issuer,
     )
 
     # Step 2: Run the credit check process and update the response object
     credit_approval_response.is_approved = get_credit_approval_request_result(
-        date_of_birth, is_existing_customer, credit_score, credit_duration
+        credit_approval_request.date_of_birth,
+        credit_approval_request.is_existing_customer,
+        credit_score,
+        credit_duration,
     )
 
     # Step 3: Save the credit approval request to the database
