@@ -1,3 +1,15 @@
+"""
+This module contains the CreditApprovalResponse class which is responsible for representing a single
+credit approval response. This class is used to store the response of the credit approval service.
+
+Classes:
+    CreditApprovalResponse
+    
+Dependencies:
+    - datetime: The datetime module from the Python standard library.
+    - typing: The typing module provides runtime support for type hints.
+"""
+
 import datetime
 from typing import Any
 
@@ -13,7 +25,8 @@ class CreditApprovalResponse:
         date_of_birth (datetime.date): The date of birth of the user for whom the credit approval is
         requested.
         is_approved (bool): A flag indicating if the credit approval request was approved.
-        errors (str): A string containing any errors that occurred during the credit approval process.
+        errors (str): A string containing any errors that occurred during the credit approval
+        process.
         response (str): A string containing the response from the credit approval service.
         credit_card_number (str): The credit card number of the user for whom the credit approval is
         requested.

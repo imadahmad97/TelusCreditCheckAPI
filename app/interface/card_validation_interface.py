@@ -1,5 +1,15 @@
-from app.interface.utility.credit_validation_utils import CreditCardValidator
+"""
+This module contains the get_card_validation_errors function which is responsible for serving as the
+interface for the credit card validation. It validates the credit card information and returns the
+validation errors.
+
+Dependencies:
+    - CreditCardValidator: The class representing the credit card validator.
+    - datetime: The datetime module from the Python standard library.
+"""
+
 import datetime
+from app.interface.utility.credit_validation_utils import CreditCardValidator
 
 
 def get_card_validation_errors(
