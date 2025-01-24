@@ -66,12 +66,19 @@ class DataBaseService:
 
         db = self.supabase
 
-        data: Any = (
-            db.table("credit_scores")
-            .select("score, duration")
-            .eq("card_number", credit_card_number)
-            .execute()
-        )
+        try:
+            data: Any = (
+                db.table("credit_scores")
+                .select("score, duration")
+                .eq("card_number", credit_card_number)
+                .execute()
+            )
+
+        except Exception as e:
+            logging.error(
+                "Failed to fetch credit score and duration: %s, using random values", e
+            )
+
         result = {}
 
         try:
@@ -108,14 +115,17 @@ class DataBaseService:
             request.
         """
         db = self.supabase
-        (
-            db.table("transactions")
-            .insert(
-                {
-                    "card_number": credit_card_number,
-                    "approved?": is_approved,
-                    "errors": errors,
-                }
+        try:
+            (
+                db.table("transactions")
+                .insert(
+                    {
+                        "card_number": credit_card_number,
+                        "approved?": is_approved,
+                        "errors": errors,
+                    }
+                )
+                .execute()
             )
-            .execute()
-        )
+        except Exception as e:
+            logging.error("Failed to record transaction, continuing anyway: %s", e)
