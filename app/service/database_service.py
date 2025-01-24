@@ -37,16 +37,21 @@ class DataBaseService:
         request in the Supabase database.
     """
 
-    def __init__(self, url, key):
+    def __init__(self, url: str, key: str) -> None:
         """
         Initialize the Supabase client's PostgreSQL database for the application.
         """
+        self.supabase: Client = create_client(url, key)
+        self._test_db_connection()
+
+    def _test_db_connection(self) -> None:
+        """Attempt a simple query to confirm that the Supabase DB is reachable. Raises
+        ConnectionError if not.
+        """
         try:
-            self.supabase: Client = create_client(url, key)
+            self.supabase.table("transactions").select("*").limit(1).execute()
         except Exception as e:
-            raise ConnectionError(
-                f"Error initializing connection to the database service: {e}"
-            ) from e
+            raise ConnectionError from e
 
     def fetch_credit_score_and_duration_from_db(self, credit_card_number) -> tuple:
         """
@@ -61,17 +66,12 @@ class DataBaseService:
 
         db = self.supabase
 
-        try:
-            data: Any = (
-                db.table("credit_scores")
-                .select("score, duration")
-                .eq("card_number", credit_card_number)
-                .execute()
-            )
-        except Exception as e:
-            raise ConnectionError(
-                f"Error fetching credit score and duration from the database: {e}"
-            ) from e
+        data: Any = (
+            db.table("credit_scores")
+            .select("score, duration")
+            .eq("card_number", credit_card_number)
+            .execute()
+        )
         result = {}
 
         try:
@@ -108,19 +108,14 @@ class DataBaseService:
             request.
         """
         db = self.supabase
-        try:
-            (
-                db.table("transactions")
-                .insert(
-                    {
-                        "card_number": credit_card_number,
-                        "approved?": is_approved,
-                        "errors": errors,
-                    }
-                )
-                .execute()
+        (
+            db.table("transactions")
+            .insert(
+                {
+                    "card_number": credit_card_number,
+                    "approved?": is_approved,
+                    "errors": errors,
+                }
             )
-        except Exception as e:
-            raise ConnectionError(
-                f"Error recording credit approval request transaction: {e}"
-            ) from e
+            .execute()
+        )

@@ -19,17 +19,12 @@ Dependencies:
 from typing import Annotated
 import os
 from fastapi import FastAPI, Form
-import logging
 from app.model.credit_approval_request import CreditApprovalRequest
 from app.service.credit_check_service import process_credit_check
 from app.service.database_service import DataBaseService
+from create_app import create_app
 
-try:
-    app = FastAPI()
-except Exception as e:
-    logging.error(f"Error initializing FastAPI: {e}")
-
-db_service = DataBaseService(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+app, db_service = create_app()
 
 
 @app.post("/check_credit")
