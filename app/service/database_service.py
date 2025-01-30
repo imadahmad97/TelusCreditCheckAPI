@@ -64,6 +64,8 @@ class DataBaseService:
             tuple: A tuple containing the credit score and credit duration of the user.
         """
 
+        result = {}
+
         try:
             data: Any = (
                 self.supabase.table("credit_scores")
@@ -72,21 +74,17 @@ class DataBaseService:
                 .execute()
             )
 
-            result = {}
             credit_score = result["score"] = data.data[0]["score"]
             credit_duration = result["duration"] = data.data[0]["duration"]
 
-        except Exception as e:
+        except Exception:
             logging.error(
-                "Failed to fetch credit score and/or duration: %s, using random values",
-                e,
+                "Failed to fetch credit score and/or duration, using random values"
             )
-
             credit_score = result["score"] = random.randint(
                 int(os.getenv("RANDOM_CREDIT_SCORE_MIN", "300")),
                 int(os.getenv("RANDOM_CREDIT_SCORE_MAX", "850")),
             )
-
             credit_duration = result["duration"] = random.randint(
                 int(os.getenv("RANDOM_CREDIT_DURATION_MIN", "0")),
                 int(os.getenv("RANDOM_CREDIT_DURATION_MAX", "10")),

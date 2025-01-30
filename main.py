@@ -17,23 +17,13 @@ Dependencies:
 """
 
 from typing import Annotated
-from fastapi import Form
-import logging
+from fastapi import Form, FastAPI
 from app.model.credit_approval_request import CreditApprovalRequest
 from app.service.credit_check_service import process_credit_check
-from create_app import create_app, InitializationError
+from app import init_db
 
-try:
-    app, db_service = create_app()
-except ConnectionError as e:
-    logging.error("[APP INIT] Failed to initialize connection to Supabase.")
-    raise ConnectionError("Failed to initialize connection to Supabase.") from e
-except InitializationError as e:
-    logging.error("[APP INIT] Failed to initialize FastAPI app.")
-    raise InitializationError("Failed to initialize FastAPI app.") from e
-except Exception as e:
-    logging.error("[APP INIT] Failed to initialize app.")
-    raise InitializationError("Failed to initialize app.") from e
+app = FastAPI()
+db_service = init_db()
 
 
 @app.post("/check_credit")
