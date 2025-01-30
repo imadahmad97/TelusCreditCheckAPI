@@ -64,34 +64,29 @@ class DataBaseService:
             tuple: A tuple containing the credit score and credit duration of the user.
         """
 
-        db = self.supabase
-
         try:
             data: Any = (
-                db.table("credit_scores")
+                self.supabase.table("credit_scores")
                 .select("score, duration")
                 .eq("card_number", credit_card_number)
                 .execute()
             )
 
+            result = {}
+            credit_score = result["score"] = data.data[0]["score"]
+            credit_duration = result["duration"] = data.data[0]["duration"]
+
         except Exception as e:
             logging.error(
-                "Failed to fetch credit score and duration: %s, using random values", e
+                "Failed to fetch credit score and/or duration: %s, using random values",
+                e,
             )
 
-        result = {}
-
-        try:
-            credit_score = result["score"] = data.data[0]["score"]
-        except IndexError:
             credit_score = result["score"] = random.randint(
                 int(os.getenv("RANDOM_CREDIT_SCORE_MIN", "300")),
                 int(os.getenv("RANDOM_CREDIT_SCORE_MAX", "850")),
             )
 
-        try:
-            credit_duration = result["duration"] = data.data[0]["duration"]
-        except IndexError:
             credit_duration = result["duration"] = random.randint(
                 int(os.getenv("RANDOM_CREDIT_DURATION_MIN", "0")),
                 int(os.getenv("RANDOM_CREDIT_DURATION_MAX", "10")),
@@ -114,10 +109,9 @@ class DataBaseService:
             errors (str): A string containing the errors encountered during the credit approval
             request.
         """
-        db = self.supabase
         try:
             (
-                db.table("transactions")
+                self.supabase.table("transactions")
                 .insert(
                     {
                         "card_number": credit_card_number,
@@ -128,4 +122,4 @@ class DataBaseService:
                 .execute()
             )
         except Exception as e:
-            logging.error("Failed to record transaction, continuing anyway: %s", e)
+            logging.error("Failed to record transaction: %s", e)
