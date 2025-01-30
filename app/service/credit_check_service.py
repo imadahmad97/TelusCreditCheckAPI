@@ -1,5 +1,5 @@
 """
-This module contains the credit_check_processor function which serves as the interface for the
+This module contains the process_credit_check function which serves as the interface for the
 credit check processor. It validates the incoming credit approval request, fetches the credit score
 and duration from the database, runs the credit check process, saves the credit approval request to
 the database, and returns the response.

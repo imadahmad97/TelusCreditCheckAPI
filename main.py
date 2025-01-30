@@ -1,19 +1,20 @@
 """
-This module contains the route for the Telus Credit Check API. It handles POST requests for 
-the /check_credit endpoint and uses the handle_credit_check_request function to process the credit 
-check request.
+This module contains the API endpoint for checking the approval status of a credit approval request.
+It uses the FastAPI framework to create the API endpoint. The API endpoint is a POST request that 
+takes in the form data for the credit approval request and returns the result of the credit check.
+
+Routes:
+    /check_credit: The API endpoint for checking the approval status of a credit approval request.
 
 Functions:
-    credit_check_route(credit_approval_request: Annotated[CreditApprovalRequest, Form()]) -> dict: 
-    The API endpoint to check approval status of a credit approval request.
-
-Endpoints:
-    /check_credit: The endpoint to check the approval status of a credit approval request.
+    credit_check_route: The function that implements the API endpoint for checking the approval 
+    status of a credit approval request.
 
 Dependencies:
-    - FastAPI
-    - CreditApprovalRequest
-    - handle_credit_check_request
+    - fastapi: The FastAPI framework for building APIs.
+    - app.model.credit_approval_request: The model for the credit approval request.
+    - app.service.credit_check_service: The service for processing the credit check.
+    - app: The module that initializes the database connection.
 """
 
 from typing import Annotated

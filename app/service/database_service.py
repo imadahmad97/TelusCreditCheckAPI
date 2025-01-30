@@ -1,17 +1,17 @@
 """
-This module contains the DataBaseService class, which is responsible for interacting with the
-Supabase database. It contains methods for checking the credit score and duration of a user, as well
-as recording the transaction of a credit approval request.
+This module contains a class for interacting with the Supabase database. The class contains methods
+for checking the credit score and duration of a user, as well as recording the transaction of a
+credit approval request.
 
 Classes:
-    DataBaseService
-
+    DataBaseService: A class for interacting with the Supabase database.
+    
 Dependencies:
-    - random: This module implements pseudo-random number generators for various distributions.
-    - os: This module provides a portable way of using operating system-dependent functionality.
-    - Any: A special type that indicates an unconstrained type.
-    - create_client: A function that creates a Supabase client object.
-    - Client: The Supabase client object for interacting with the database.
+    - random: The random module for generating random values.
+    - os: The OS module for interacting with the operating system.
+    - logging: The logging module for logging messages.
+    - typing: The typing module for type hints.
+    - supabase: The Supabase module for interacting with the Supabase database.
 """
 
 import random
@@ -28,9 +28,11 @@ class DataBaseService:
     credit approval request.
 
     Attributes:
-        supabase (Client): The Supabase client object for interacting with the
+        supabase (Client): The Supabase client object for interacting with the Supabase database.
 
     Methods:
+        __init__: Initialize the Supabase client's PostgreSQL database for the application.
+        _test_db_connection: Attempt a simple query to confirm that the Supabase DB is reachable.
         fetch_credit_score_and_duration_from_db: Fetch the credit score and credit duration of the
         user by querying the Supabase database.
         record_credit_approval_request_transaction: Record the transaction of the credit approval
@@ -39,7 +41,8 @@ class DataBaseService:
 
     def __init__(self, url: str, key: str) -> None:
         """
-        Initialize the Supabase client's PostgreSQL database for the application.
+        Initialize the Supabase client's PostgreSQL database for the application, and test the
+        connection to the database.
         """
         self.supabase: Client = create_client(url, key)
         self._test_db_connection()
@@ -47,6 +50,9 @@ class DataBaseService:
     def _test_db_connection(self) -> None:
         """Attempt a simple query to confirm that the Supabase DB is reachable. Raises
         ConnectionError if not.
+
+        Raises:
+            ConnectionError: An error occurred when testing the connection to the Supabase database.
         """
         try:
             self.supabase.table("transactions").select("*").limit(1).execute()
@@ -55,13 +61,15 @@ class DataBaseService:
 
     def fetch_credit_score_and_duration_from_db(self, credit_card_number) -> tuple:
         """
-        Fetch the credit score and credit duration of the user by querying the Supabase database.
+        Fetch the credit score and credit duration of the user by querying the Supabase database. If
+        the query fails for any reason, random values are used instead.
 
         Parameters:
             credit_card_number (str): The credit card number of the user.
 
         Returns:
             tuple: A tuple containing the credit score and credit duration of the user.
+
         """
 
         result = {}

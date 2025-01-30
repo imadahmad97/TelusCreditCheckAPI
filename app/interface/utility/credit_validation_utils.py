@@ -21,12 +21,11 @@ class CreditCardValidator:
     expiration date, and credit card issuer.
 
     Methods:
-        validate_card_number_lengths: Validates the length of the credit card number and CVV to be
-        16 and 3-4 digits respectively.
-        validate_card_expiration_date: Validates the expiration date of the credit card to be in
-        the future.
-        validate_credit_card_issuer: Validates the credit card issuer to be Visa, MasterCard, or
-        American Express.
+        get_card_number_length_errors: Validates the length of the credit card number.
+        get_cvv_length_errors: Validates the length of the CVV.
+        get_card_expired_errors: Validates the expiration date of the credit card.
+        get_card_issuer_errors: Validates the credit card issuer.
+        get_luhn_validation_errors: Validates the credit card number using the Luhn algorithm.
     """
 
     @staticmethod
